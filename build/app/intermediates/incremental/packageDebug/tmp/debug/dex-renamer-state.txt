@@ -1,0 +1,4 @@
+#Sun Oct 27 15:45:48 CDT 2019
+base.0=/Users/coltonmccasland/Downloads/flutter_weather_pin/build/app/intermediates/transforms/dexMerger/debug/0
+renamed.0=classes.dex
+path.0=classes.dex
