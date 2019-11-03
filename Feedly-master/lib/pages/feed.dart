@@ -7,6 +7,9 @@ import 'package:simple_moment/simple_moment.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class FeedPage extends StatefulWidget {
+  static const String routeName = "/feedPage";
+
+
   @override
   _FeedPageState createState() => _FeedPageState();
 }
@@ -115,69 +118,69 @@ class _FeedPageState extends State<FeedPage> {
     _getFeedFuture = _getFeed();
   }
 
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(
-//        leading: Icon(Icons.rss_feed),
-//        title: Text('Your Feed'),
-//        actions: <Widget>[
-//          IconButton(
-//            icon: Icon(Icons.exit_to_app),
-//            onPressed: () {},
-//          )
-//        ],
-//      ),
-////      body: ListView(
-////        children: _getItems(),
-////
-////      ),
-//
-//
-//      floatingActionButton: FloatingActionButton(
-//        child: Icon(Icons.add),
-//        onPressed: () {
-//          _navigateToCreatePage();
-//        },
-//      ),
-//    );
-//  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.rss_feed),
+        title: Text('Your Feed'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: ListView(
+        children: _getItems(),
+
+      ),
+
+
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          _navigateToCreatePage();
+        },
+      ),
+    );
+  }
 
   var _container = Container(
     height: 200,
     color: Colors.blue,
     margin: EdgeInsets.symmetric(vertical: 10),
   );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("ListView")),
-      body: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: ListView( // parent ListView
-          children: <Widget>[
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//      appBar: AppBar(title: Text("ListView")),
+//      body: Padding(
+//        padding: const EdgeInsets.all(40.0),
+//        child: ListView( // parent ListView
+//          children: <Widget>[
+////            _container,
+////            _container,
+//            Container(
+//              height: 200, // give it a fixed height constraint
+//              color: Colors.teal,
+//              // child ListView
+//              child: ListView.builder(itemBuilder: (_, i) => ListTile(title: Text("Item ${i}"))),
+//            ),
 //            _container,
+//            Container(
+//              height: 200, // give it a fixed height constraint
+//              color: Colors.teal,
+//              // child ListView
+//              child: ListView.builder(itemBuilder: (_, i) => ListTile(title: Text("Item ${i}"))),
+//            ),
 //            _container,
-            Container(
-              height: 200, // give it a fixed height constraint
-              color: Colors.teal,
-              // child ListView
-              child: ListView.builder(itemBuilder: (_, i) => ListTile(title: Text("Item ${i}"))),
-            ),
-            _container,
-            Container(
-              height: 200, // give it a fixed height constraint
-              color: Colors.teal,
-              // child ListView
-              child: ListView.builder(itemBuilder: (_, i) => ListTile(title: Text("Item ${i}"))),
-            ),
-            _container,
-          ],
-        ),
-      ),
-    );
-  }
+//          ],
+//        ),
+//      ),
+//    );
+//  }
 
   Widget _makeCard(DocumentSnapshot postDocument) {
     return Card(

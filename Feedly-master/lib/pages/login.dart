@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_feedly/pages/feed.dart';
+import 'package:flutter_feedly/screens/home.dart';
 import 'package:flutter_feedly/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,11 +36,11 @@ class _LoginPageState extends State<LoginPage> {
       _key.currentState.showSnackBar(SnackBar(
         content: Text('Login successful'),
       ));
-      
+
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-        return FeedPage();
+        return HomeScreen();
       }));
-      
+
     } catch (e) {
       String errorMessage = (e as PlatformException).message;
       print('Console Error: $errorMessage');
@@ -61,14 +61,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.grey,
       body: Form(
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
               child: Icon(
-                Icons.rss_feed,
+                Icons.filter_drama,
+
                 size: 180.0,
                 color: Colors.white,
               ),
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.alternate_email,
+                      Icons.email,
                       color: Colors.white,
                     ),
                   ),
@@ -192,20 +193,20 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _loggingIn == true
                           ? null
                           : () {
-                              _login();
-                            },
+                        _login();
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              const EdgeInsets.symmetric(vertical: 16.0),
                               child: Text(
                                 'LOGIN',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.blueGrey,
                                 ),
                               ),
                             ),
@@ -230,8 +231,8 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (BuildContext ctx) {
-                          return SignupPage();
-                        }));
+                              return SignupPage();
+                            }));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              const EdgeInsets.symmetric(vertical: 16.0),
                               child: Text(
                                 'Dont have an Account?  Create one.',
                                 textAlign: TextAlign.center,
