@@ -52,6 +52,71 @@ class _FeedPageState extends State<FeedPage> {
     return _postDocuments;
   }
 
+  _get_Posts_All() {
+    List<Widget> _items = [];
+
+//    Widget _composeBox = GestureDetector(
+//      child: ComposeBox(),
+//      onTap: () {
+//        _navigateToCreatePage();
+//      },
+//    );
+//
+//    _items.add(_composeBox);
+
+    Widget separator = Container(
+      padding: const EdgeInsets.all(20),
+      child: Text(
+        'All Posts',
+        style: TextStyle(
+          color: Colors.black54,
+          fontSize: 30.0,
+        ),
+      ),
+
+
+    );
+
+    _items.add(separator);
+
+    Widget feed = FutureBuilder(
+      future: _getFeedFuture,
+      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+//        loading
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.data == null) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 16.0,
+              ),
+              Text('Loading ....'),
+            ],
+          );
+        }
+        //no info was found
+        else if (snapshot.data.length == 0) {
+          return Text('No data to display');
+        }
+//        populate with info
+        else {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: _posts,
+          );
+        }
+      },
+    );
+
+    _items.add(feed);
+
+    return _items;
+  }
+
   _getItems() {
     List<Widget> _items = [];
 
@@ -120,30 +185,97 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+//    show both lists
+
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
-        leading: Icon(Icons.rss_feed),
-        title: Text('Your Feed'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {},
-          )
-        ],
+        elevation: 0.0,
+        title: Text("Posts page"),),
+      body: ClipRRect(
+        borderRadius: new BorderRadius.only(
+          topLeft: const Radius.circular(40.0),
+          topRight: const Radius.circular(40.0),
+
+        ),
+
+
+//          padding: const EdgeInsets.all(10.0),
+
+        child:
+        ListView( // parent ListView
+          children: <Widget>[
+
+            Container(
+              height: 750, // give it a fixed height constraint
+              color: Colors.white,
+              // child ListView
+
+              child: ListView(
+                children: _get_Posts_All(),
+
+              ),
+            ),
+
+//        Container(
+//          height: 100,
+//          color: Colors.red,
+//        ),
+
+//            _container,
+
+//              Container(
+//                height: 250, // give it a fixed height constraint
+//                color: Colors.grey,
+//                // child ListView
+//                child: ListView(
+//                  children: _get_Markers_Recent(),
+//                ),
+//              ),
+
+//              Container(
+//                height: 150.0,
+//                child: GoogleMap(
+//                  mapType: MapType.hybrid,
+//
+//                  initialCameraPosition: initPosition,
+//                  scrollGesturesEnabled: false,
+//                  onMapCreated: (GoogleMapController controller){
+//                    _controller.complete(controller);
+//                  },
+//                ),
+//              ),
+//              FlatButton(
+//                child: Text("Update Map", style: TextStyle(color: Colors.white),),
+//                color: Colors.deepOrange,
+//                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+//                onPressed: (){
+//
+//                  updateGoogleMap();
+//                },
+//              )
+
+          ],
+
+        ),
       ),
-      body: ListView(
-        children: _getItems(),
-
-      ),
-
-
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           _navigateToCreatePage();
+
+
         },
       ),
+
+
+
     );
+
+
+
   }
 
   var _container = Container(

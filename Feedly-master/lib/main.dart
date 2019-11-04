@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 
         FeedPage.routeName: (BuildContext context) => FeedPage(),
 
-//        FireMap.routeName:(BuildContext context) => FireMap(),
+        FireMap.routeName:(BuildContext context) => FireMap(),
 
       },
     );
