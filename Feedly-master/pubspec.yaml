@@ -22,13 +22,15 @@ dependencies:
 
   firebase_auth: ^0.10.0
   cloud_firestore: ^0.12.5
-  rxdart: ^0.22.0
   firebase_storage: ^3.0.6
   image_picker: ^0.6.1+8
   simple_moment: any
   transparent_image: any
-  google_maps_flutter: ^0.5.12
+  google_maps_flutter: ^0.5.20+1
+  geolocator: ^5.1.2
+  flutter_spinkit: ^3.1.0
   location: 2.3.5
+  flutter_speed_dial: 1.2.4
 #  geolocator: 2.0.2
   geoflutterfire: ^2.0.3
 
