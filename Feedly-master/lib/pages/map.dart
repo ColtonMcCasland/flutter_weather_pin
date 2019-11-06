@@ -1,18 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:geoflutterfire/src/point.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:location/location.dart';
-import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import 'package:flutter_feedly/screens/home.dart';
-
-import 'package:flutter_feedly/streambuilder_test.dart';
 
 ///----------------------------------------
 // Documentation on geo markers query from firestore
@@ -35,14 +27,16 @@ class FireMapState extends State<FireMap> {
   bool dialVisible = true;
 
   Position position;
-  Widget _child;
+  Widget _map;
+  Widget _list;
+
 
 
 
 
   @override
   void initState() {
-    _child=SpinKitRotatingCircle(color: Colors.white, size: 50.0, );
+    _map=SpinKitCubeGrid(color: Colors.white, size: 50.0, );
     getCurrentLocation();
     populateClients();
     super.initState();
@@ -68,32 +62,39 @@ class FireMapState extends State<FireMap> {
       curve: Curves.bounceIn,
       children: [
         SpeedDialChild(
-          child: Icon(Icons.accessibility, color: Colors.white),
-          backgroundColor: Colors.deepOrange,
-          onTap: () => print('FIRST CHILD'),
-          label: 'First Child',
+          child: Icon(Icons.center_focus_weak, color: Colors.white),
+          backgroundColor: Colors.pink,
+          onTap: ()
+          {
+
+          },
+          label: 'Button 1',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
-          labelBackgroundColor: Colors.deepOrangeAccent,
+          labelBackgroundColor: Colors.pink,
         ),
         SpeedDialChild(
-          child: Icon(Icons.brush, color: Colors.white),
+          child: Icon(Icons.zoom_out, color: Colors.white),
+          backgroundColor: Colors.blue,
+          onTap: ()
+          {
+
+          },
+          label: 'Button 2',
+          labelStyle: TextStyle(fontWeight: FontWeight.w500),
+          labelBackgroundColor: Colors.blue,
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.zoom_in, color: Colors.white),
           backgroundColor: Colors.green,
-          onTap: () => print('SECOND CHILD'),
-          label: 'Second Child',
+          onTap: ()
+          {
+
+          },
+          label: 'Button 3',
           labelStyle: TextStyle(fontWeight: FontWeight.w500),
           labelBackgroundColor: Colors.green,
         ),
-        SpeedDialChild(
-          child: Icon(Icons.keyboard_voice, color: Colors.white),
-          backgroundColor: Colors.blue,
-          onTap: () => print('THIRD CHILD'),
-          labelWidget: Container(
-            color: Colors.blue,
-            margin: EdgeInsets.only(right: 10),
-            padding: EdgeInsets.all(6),
-            child: Text('Custom Label Widget'),
-          ),
-        ),
+
       ],
     );
   }
@@ -116,40 +117,12 @@ class FireMapState extends State<FireMap> {
     super.dispose();
   }
 
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(title: Text('test'),),
-//      body: Container(
-//          child: Column(
-//              crossAxisAlignment: CrossAxisAlignment.center,
-//              children: <Widget>[
-//                Center(
-//                  child: Card(
-//
-//                    elevation: 4,
-//                    margin: EdgeInsets.symmetric(vertical: 8),
-//                    child: SizedBox(
-//                      width: MediaQuery.of(context).size.width - 30,
-//                      height: MediaQuery.of(context).size.height * (3 / 5),
-//                      child: _child,
-//                    ),
-//                    ),
-//                  ),
-//
-//              ]),
-//
-//      ),
-//
-//    );
-//  }
-
   @override
   Widget build(BuildContext context) {
 //    show both lists
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         elevation: 0.0,
         title: Text("Posts page"),),
@@ -157,8 +130,6 @@ class FireMapState extends State<FireMap> {
         borderRadius: new BorderRadius.only(
           topLeft: const Radius.circular(40.0),
           topRight: const Radius.circular(40.0),
-
-
 
         ),
 
@@ -171,18 +142,23 @@ class FireMapState extends State<FireMap> {
               color: Colors.white,
               // child ListView
 
-              child: _child,
+              child: _map,
+            ),
+
+            Container(
+//              list info
+              child: Text("Current coordinates: " + _lat.toString() + " & "+ _lng.toString(),  ),
+            ),
+            Container(
+//              empty space. perhaps list markers.
             ),
 
 
 
           ],
-
         ),
-
       ),
       floatingActionButton: buildSpeedDial(),
-
     );
   }
 
@@ -193,7 +169,7 @@ return GoogleMap(
     Set<Marker>.of(markers.values),
     initialCameraPosition: CameraPosition(
     target: LatLng(position.latitude, position.longitude),
-    zoom: 16.0,
+    zoom: 10.0,
     ),
     onMapCreated: (GoogleMapController controller) {
     _controller = controller;
@@ -207,6 +183,27 @@ return GoogleMap(
     );
   }
 
+  Widget markerListWidget(){
+    return ListView(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.map),
+          title: Text('Map'),
+        ),
+        ListTile(
+          leading: Icon(Icons.photo_album),
+          title: Text('Album'),
+        ),
+        ListTile(
+          leading: Icon(Icons.phone),
+          title: Text('Phone'),
+        ),
+      ],
+    );
+  }
+
+
+
 
 
   List<Placemark> placemark;
@@ -216,7 +213,7 @@ return GoogleMap(
     _address = placemark[0].name.toString() + "," + placemark[0].locality.toString() + ", Postal Code:" + placemark[0].postalCode.toString();
     setState(() {
 
-      _child = mapWidget();
+      _map = mapWidget();
 
     });
   }
@@ -259,6 +256,7 @@ return GoogleMap(
 
   populateClients() {
     print('poplulating...');
+
     Firestore.instance.collection('test').getDocuments().then((docs) {
       if ( docs.documents.isNotEmpty) {
         for(int i = 0; i < docs.documents.length; i++){

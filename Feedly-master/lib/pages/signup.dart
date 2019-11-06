@@ -78,16 +78,16 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: Colors.red,
+      backgroundColor: Colors.amber,
       body: Form(
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
               child: Icon(
-                Icons.rss_feed,
+                Icons.wb_cloudy,
                 size: 60.0,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             Container(
@@ -100,7 +100,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -114,26 +114,26 @@ class _SignupPageState extends State<SignupPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.person,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _nameController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter your name",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -151,7 +151,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -165,26 +165,26 @@ class _SignupPageState extends State<SignupPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.alternate_email,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _emailController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter your email",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -202,7 +202,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -216,27 +216,27 @@ class _SignupPageState extends State<SignupPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.lock_open,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _passwordController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       obscureText: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter your password",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -254,7 +254,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -268,27 +268,27 @@ class _SignupPageState extends State<SignupPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.lock_open,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _passwordConfirmController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       obscureText: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Re-enter your password",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -303,9 +303,9 @@ class _SignupPageState extends State<SignupPage> {
                 children: <Widget>[
                   Expanded(
                     child: FlatButton(
-                      splashColor: Colors.white,
-                      color: Colors.white,
-                      disabledColor: Colors.white.withOpacity(.5),
+                      splashColor: Colors.black,
+                      color: Colors.black,
+                      disabledColor: Colors.black.withOpacity(.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
@@ -325,7 +325,7 @@ class _SignupPageState extends State<SignupPage> {
                                 'SIGN UP',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -361,7 +361,7 @@ class _SignupPageState extends State<SignupPage> {
                                 'Already have an Account?  Login here.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),

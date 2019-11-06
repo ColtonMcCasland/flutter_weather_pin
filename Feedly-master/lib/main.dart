@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
 
-          primarySwatch: Colors.blueGrey,
+          primarySwatch: Colors.amber,
           backgroundColor: Colors.white
       ),
       home: LoginPage(),
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         FeedPage.routeName: (BuildContext context) => FeedPage(),
 
         FireMap.routeName:(BuildContext context) => FireMap(),
+
 
       },
     );

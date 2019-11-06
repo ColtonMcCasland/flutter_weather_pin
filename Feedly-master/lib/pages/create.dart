@@ -165,7 +165,7 @@ class _CreatePageState extends State<CreatePage> {
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                   border: Border.all(
-                color: Colors.red,
+                color: Colors.amber,
               )),
               child: TextField(
                 controller: _postTextController,
@@ -186,8 +186,8 @@ class _CreatePageState extends State<CreatePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      splashColor: Colors.red,
-                      color: Colors.red,
+                      splashColor: Colors.amber,
+                      color: Colors.amber,
                       onPressed: () {
                         _showModalBottomSheet();
                       },
@@ -220,8 +220,8 @@ class _CreatePageState extends State<CreatePage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      splashColor: Colors.red,
-                      color: Colors.red,
+                      splashColor: Colors.amber,
+                      color: Colors.amber,
                       onPressed: () {
                         _post();
                       },

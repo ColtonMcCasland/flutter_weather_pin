@@ -5,11 +5,14 @@ import 'package:flutter_feedly/screens/home.dart';
 import 'package:flutter_feedly/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -61,17 +64,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.amber,
       body: Form(
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
               child: Icon(
-                Icons.filter_drama,
+                Icons.wb_cloudy,
 
                 size: 180.0,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             Container(
@@ -84,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -98,26 +101,26 @@ class _LoginPageState extends State<LoginPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.email,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _emailController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter your email",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -135,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.black.withOpacity(0.5),
                   width: 1.0,
                 ),
                 borderRadius: BorderRadius.circular(
@@ -149,27 +152,27 @@ class _LoginPageState extends State<LoginPage> {
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
                       Icons.lock_open,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
                   ),
                   Container(
                     height: 30.0,
                     width: 1.0,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.5),
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
                     child: TextFormField(
                       controller: _passwordController,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                       obscureText: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Enter your password",
                         hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(.5),
+                          color: Colors.black.withOpacity(.5),
                         ),
                       ),
                     ),
@@ -184,9 +187,9 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Expanded(
                     child: FlatButton(
-                      splashColor: Colors.white,
-                      color: Colors.white,
-                      disabledColor: Colors.white.withOpacity(0.5),
+                      splashColor: Colors.black,
+                      color: Colors.black,
+                      disabledColor: Colors.black.withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
@@ -206,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                                 'LOGIN',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.blueGrey,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),

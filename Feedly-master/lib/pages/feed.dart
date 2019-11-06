@@ -190,7 +190,7 @@ class _FeedPageState extends State<FeedPage> {
 //    show both lists
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.amber,
       appBar: AppBar(
         elevation: 0.0,
         title: Text("Posts page"),),
@@ -218,45 +218,6 @@ class _FeedPageState extends State<FeedPage> {
 
               ),
             ),
-
-//        Container(
-//          height: 100,
-//          color: Colors.red,
-//        ),
-
-//            _container,
-
-//              Container(
-//                height: 250, // give it a fixed height constraint
-//                color: Colors.grey,
-//                // child ListView
-//                child: ListView(
-//                  children: _get_Markers_Recent(),
-//                ),
-//              ),
-
-//              Container(
-//                height: 150.0,
-//                child: GoogleMap(
-//                  mapType: MapType.hybrid,
-//
-//                  initialCameraPosition: initPosition,
-//                  scrollGesturesEnabled: false,
-//                  onMapCreated: (GoogleMapController controller){
-//                    _controller.complete(controller);
-//                  },
-//                ),
-//              ),
-//              FlatButton(
-//                child: Text("Update Map", style: TextStyle(color: Colors.white),),
-//                color: Colors.deepOrange,
-//                shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-//                onPressed: (){
-//
-//                  updateGoogleMap();
-//                },
-//              )
-
           ],
 
         ),
