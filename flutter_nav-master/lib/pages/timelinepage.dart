@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widget/drawer.dart';
+import '../widgets/drawer.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
 

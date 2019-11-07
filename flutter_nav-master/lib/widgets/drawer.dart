@@ -15,7 +15,7 @@ class AppDrawer extends StatelessWidget {
             DrawerHeader(
               child: Text('Drawer Header'),
               decoration: BoxDecoration(
-                color: Colors.pink[900],
+                color: Colors.amber,
               ),
             ),
             ListTile(
@@ -47,6 +47,14 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.pushReplacementNamed(context, Routes.calendar);
               },
+            ),
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+//                Navigator.pop(context);
+
+                Navigator.pushReplacementNamed(context, Routes.logout);
+                },
             ),
           ],
         ),

@@ -1,11 +1,11 @@
 import 'package:f_nav/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'routes/Routes.dart';
-import 'modules/chartspage.dart';
-import 'modules/homepage.dart';
-import 'modules/timelinepage.dart';
-import 'modules/mapspage.dart';
-import 'modules/calendarpage.dart';
+import 'pages/chartspage.dart';
+import 'pages/homepage.dart';
+import 'pages/timelinepage.dart';
+import 'pages/mapspage.dart';
+import 'pages/calendarpage.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,12 +15,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: appTitle,
       theme : ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.dark,
-        primaryColor: Colors.pink[900],
-        accentColor: Colors.pink[600],
+        primaryColor: Colors.amber,
+        accentColor: Colors.amberAccent,
 
         // Define the default font family.
         fontFamily: 'Montserrat',
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
         Routes.timeline: (context) => TimelinePage(),
         Routes.map: (context) => MapsPage(),
         Routes.calendar: (context) => CalendarPage(),
+        Routes.logout: (context) => LoginPage(),
+
       },
     );
   }

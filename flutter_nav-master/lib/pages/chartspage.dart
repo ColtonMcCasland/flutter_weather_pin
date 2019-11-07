@@ -4,7 +4,7 @@ import 'dart:math';
 /// chart.
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:f_nav/widget/drawer.dart';
+import 'package:f_nav/widgets/drawer.dart';
 
 class ChartsPage extends StatelessWidget {
   static const String routeName = '/charts';

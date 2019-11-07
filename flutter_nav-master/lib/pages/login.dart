@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:f_nav/modules/homepage.dart';
+import 'package:f_nav/pages/homepage.dart';
 import 'package:f_nav/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
+  static const String routeName = '/logout';
+
 
   @override
   _LoginPageState createState() => _LoginPageState();

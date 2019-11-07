@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widget/drawer.dart';
+import '../widgets/drawer.dart';
 
 class HomePage extends StatelessWidget {
   static const String routeName = '/home';
