@@ -1,4 +1,5 @@
 import 'package:f_nav/pages/login.dart';
+import 'package:f_nav/pages/weatherpage.dart';
 import 'package:flutter/material.dart';
 import 'routes/Routes.dart';
 import 'pages/chartspage.dart';
@@ -39,9 +40,13 @@ class MyApp extends StatelessWidget {
         Routes.home: (context) => HomePage(),
         Routes.charts: (context) => ChartsPage.withSampleData(),
         Routes.timeline: (context) => TimelinePage(),
+
         Routes.map: (context) => MapsPage(),
+        Routes.weather: (context) => weatherPage(),
+
         Routes.calendar: (context) => CalendarPage(),
         Routes.logout: (context) => LoginPage(),
+
 
       },
     );

@@ -43,6 +43,12 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              title: Text('Weather'),
+              onTap: () {
+                Navigator.pushReplacementNamed(context, Routes.weather);
+              },
+            ),
+            ListTile(
               title: Text('Calendar'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, Routes.calendar);

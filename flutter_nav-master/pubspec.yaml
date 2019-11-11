@@ -41,6 +41,7 @@ dependencies:
   location: ^2.3.4
   flutter_speed_dial: 1.2.4
   random_string: 1.1.0
+  weather: 0.9.5
 
 
 dev_dependencies:
