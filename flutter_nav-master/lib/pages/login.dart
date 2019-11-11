@@ -250,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                                 'Dont have an Account?  Create one.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),
