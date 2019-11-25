@@ -8,18 +8,36 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:location/location.dart';
 import 'package:weather/weather.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
-
+import 'package:simple_moment/simple_moment.dart';
+import 'package:transparent_image/transparent_image.dart';
+import 'package:f_nav/pages/secondPage.dart';
 
 class MapsPage extends StatelessWidget {
   static const String routeName = '/map';
 
+  final title = "test";
+  final description = " test";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(
-        title: Text("Map"),
+        title: Text("Homepage"),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.notification_important), onPressed: ()
+          {
+            print("change list shown in view");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SecondPage(
+                        title: title, description: description)));
+          }
+          ),
+        ],
       ),
       body: new MapSample(),
     );
@@ -59,6 +77,15 @@ class MapSampleState extends State<MapSample> {
     _lastMapPosition = position.target;
   }
 
+  Size screenSize(BuildContext context) {
+    return MediaQuery.of(context).size;
+  }
+  double screenHeight(BuildContext context, {double dividedBy = 1}) {
+    return screenSize(context).height / dividedBy;
+  }
+  double screenWidth(BuildContext context, {double dividedBy = 1}) {
+    return screenSize(context).width / dividedBy;
+  }
 
   @override
   void initState() {
@@ -105,7 +132,7 @@ class MapSampleState extends State<MapSample> {
 
       rotateGesturesEnabled: false,
       markers: markers,
-      mapType: MapType.normal,
+      mapType: _currentMapType,
       initialCameraPosition: CameraPosition(
           target: LatLng(_lat, _lng), zoom: 10),
       onMapCreated:
@@ -134,6 +161,17 @@ class MapSampleState extends State<MapSample> {
       position = res;
       CameraPosition(target: LatLng(position.latitude, position.longitude));
     });
+  }
+
+  void getCamera_on_Marker(location)  async {
+    final GoogleMapController controller = await _controller.future;
+
+    controller.animateCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(location.latitude, location.longitude), zoom: 8.0,)
+        ),
+
+
+    );
   }
 
   populateMap_w_Markers() {
@@ -178,10 +216,87 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body: Stack(children: <Widget>[ _map]), //map
+      body: Column(children: <Widget>[
+        Text("Marker list: "),
+        Container(
+          child: SizedBox(
+            height: screenHeight(context, dividedBy: 4),
+            width: screenWidth(context, dividedBy: 1.1),
+            child:
+            StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('test')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError)
+                  return new Text('Error: ${snapshot.error}');
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return new Text('Loading...');
+                  default:
+                    return new ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: snapshot.data.documents
+                          .map((DocumentSnapshot document) {
+//                        return new CustomCard(
+//                          title: document['address'],
+//                          description: document['address'],
+//                          location: document['location'],
+//
+//                        );
+                      return Card(
+                          child: Container(
+                              padding: const EdgeInsets.only(top: 1.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(document['address']),
+                                  Text(document['address']),
+                                  Icon(Icons.pin_drop),
+                                  FlatButton(
+                                      child: Text(document['address']),
+
+                                      onPressed: ()
+                                      {
+                                    getCamera_on_Marker(document['location']);
+
+//                                        Navigator.push(
+//                                            context,
+//                                            MaterialPageRoute(
+//                                                builder: (context) => SecondPage(
+//                                                    title: document['address'], description: document['address'])));
+                                      }
+                                  ),
+                                ],
+                              )));
+                      }).toList(),
+                    );
+                }
+              },
+            ),
+          ),
+        ),
+        Container(
+          child: SizedBox(
+        height: screenHeight(context,
+            dividedBy: 2),
+        child:_map,
+        ),),
+
+//        Expanded(
+//
+//          child: ListView(
+//            children:_buildContainer(),
+//          ),
+//        )
+
+      ]
+      ), //map
       floatingActionButton: _getMapButtons(), //buttons
     );
   }
@@ -192,7 +307,7 @@ class MapSampleState extends State<MapSample> {
   /// Post to Firebase DB
   addToList(lat, long) async {
     if(lat == null || long == null ){
-      print("what!");
+      print("what!?");
     }
     else {
       Firestore.instance.collection('test').add({
@@ -217,7 +332,7 @@ class MapSampleState extends State<MapSample> {
               children: <Widget>[
                 new TextField(
                   decoration: InputDecoration(
-                    hintText: 'Write your message here ...',
+                    hintText: 'Write marker information',
                     border: InputBorder.none,
                   ),
 

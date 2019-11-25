@@ -62,6 +62,14 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, Routes.logout);
                 },
             ),
+            ListTile(
+              title: Text('Feed'),
+              onTap: () {
+//                Navigator.pop(context);
+
+                Navigator.pushReplacementNamed(context, Routes.feed);
+              },
+            ),
           ],
         ),
       );

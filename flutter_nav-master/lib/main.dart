@@ -1,3 +1,4 @@
+import 'package:f_nav/pages/feed.dart';
 import 'package:f_nav/pages/login.dart';
 import 'package:f_nav/pages/weatherpage.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
 
         Routes.calendar: (context) => CalendarPage(),
         Routes.logout: (context) => LoginPage(),
+        Routes.feed: (context) => FeedPage(),
 
 
       },

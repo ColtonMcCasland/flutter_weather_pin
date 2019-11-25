@@ -42,6 +42,9 @@ dependencies:
   flutter_speed_dial: 1.2.4
   random_string: 1.1.0
   weather: 0.9.5
+  font_awesome_flutter: ^8.2.0
+  flutter_slidable: any
+
 
 
 dev_dependencies:

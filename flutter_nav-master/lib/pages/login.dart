@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:f_nav/pages/homepage.dart';
+import 'package:f_nav/pages/mapspage.dart';
 import 'package:f_nav/pages/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       ));
 
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-        return HomePage();
+        return MapsPage();
       }));
 
     } catch (e) {
