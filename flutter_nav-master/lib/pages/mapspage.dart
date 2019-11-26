@@ -325,7 +325,7 @@ class MapSampleState extends State<MapSample> {
   Widget build(BuildContext context) {
      i = 0;
     return new Scaffold(
-//      backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body:
       Column(children: <Widget>[
 //        Text("Marker list: "),
@@ -534,17 +534,22 @@ class MapSampleState extends State<MapSample> {
             ),
           ),
         ),
+
+        SizedBox(height: 70, child: Text("empty space", style: TextStyle(color: Colors.black),),), // space between list and map
+
         Container(
           margin: const EdgeInsets.all(1.0),
-          padding: const EdgeInsets.all(13.0),
+          padding: const EdgeInsets.all(1.0),
           decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.black, width: 14.8)
-              )
-          ),
+            border: Border.all(
+            width: 3.0
+            ),
+            borderRadius: BorderRadius.all(
+            Radius.circular(2.0)
+          )),
           child: SizedBox(
         height: screenHeight(context,
-            dividedBy: 1.8),
+            dividedBy: 2),
         child: _map,
         ),),
       ]
