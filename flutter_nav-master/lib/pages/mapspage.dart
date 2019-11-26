@@ -320,12 +320,197 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+  Widget listWidget(){
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('test').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError)
+          return new Text('Error: ${snapshot.error}');
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return new SpinKitChasingDots(
+              color: Colors.yellow, size: 50, duration: new Duration(seconds: 3),);
+          default:
+//                    card ListView
+            return new ListView(
+              scrollDirection: Axis.horizontal,
+              children: snapshot.data.documents.map((DocumentSnapshot document) {
+
+
+                var latitude = document['location'].latitude;
+                var longitude = document['location'].longitude;
+                print("condition: " + condition.toString());
+
+                var temp = condition.toString();
+                print(temp);
+
+                // init card icon
+                var cardIcon;
+                // init card color
+                var cardColor;
+
+                //  Conditions for card icons and color from OpenWeatherMap
+
+                if(conditionsMap[iconCounter].toString() == "clear sky"){
+                  cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
+                  cardColor = Colors.yellow;
+                }
+
+                else if(conditionsMap[iconCounter].toString() == "scattered clouds"){
+                  cardIcon = Icon(WeatherIcons.day_cloudy_high, color: Colors.black,);
+                  cardColor = Colors.grey;
+
+                }
+                else if(conditionsMap[iconCounter].toString() == "few clouds"){
+                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                  cardColor = Colors.lightBlueAccent;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "scattered clouds"){
+                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                  cardColor = Colors.green;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "broken clouds"){
+                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                  cardColor = Colors.blueGrey;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "overcast clouds"){
+                  cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
+                  cardColor = Colors.grey;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "rain"){
+                  cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
+                  cardColor = Colors.blueAccent;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "light rain"){
+                  cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
+                  cardColor = Colors.blue;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "thunderstorm"){
+                  cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors.black,);
+                  cardColor = Colors.lightBlueAccent;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "snow"){
+                  cardIcon = Icon(WeatherIcons.day_snow, color: Colors.black,);
+                  cardColor = Colors.lime;
+
+                }
+                else if(conditionsMap[iconCounter ].toString() == "mist"){
+                  cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
+                  cardColor = Colors.teal;
+
+                }
+
+                else
+                {
+                  cardIcon = Icon(Icons.error, color: Colors.black,);
+                }
+
+
+//                        DEBUG PRINTS:
+//                        print("2:" + conditionsMap.toString());
+
+//                        print(i);
+                iconCounter++; // we increment int here when we build a card
+
+//                        TODO: IM NOT CONVINCED THE DESCRIPTION VARIABLE IS WORKING HOW IT SHOULD HERE
+
+
+                return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+
+//                        color: Colors.blueGrey,
+                    color: cardColor,
+
+                    child: Container(
+                        padding: const EdgeInsets.only(top: 1.0),
+                        child: Column(
+                          children: <Widget>[
+                            Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
+                            cardIcon,
+                            SizedBox(height: 3), //separator and spa
+                            Text("conditions: \n" + conditionsMap[iconCounter - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
+
+
+//
+                            SizedBox(height: 5), //separator and spacer
+                            SizedBox(
+                              height: 30,
+                              child: RaisedButton(
+                                color: cardColor,
+                                elevation: 12,
+                                onPressed: () {
+                                  Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+
+                                  getCamera_on_Marker(document['location']);
+                                },
+                                padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                child: Container(
+                                  child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5,), //separator and spacer
+                            SizedBox(
+                              height: 20,
+                              child: RaisedButton(
+                                color: cardColor,
+                                elevation: 12,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SecondPage(
+                                              title: document['address'], description: document['address'])));
+
+                                },
+                                padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                child: Container(
+                                  child: Text("More info",style: TextStyle(color: Colors.black),),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 5,), //separator and spacer
+                            SizedBox(
+                              height: 20,
+                              child: RaisedButton(
+                                color: cardColor,
+                                elevation: 12,
+                                onPressed: () {
+                                  deleteMarker(document.documentID);
+                                  re_InitilizeMap();
+                                },
+                                padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                child: Container(
+                                  child: Text("Delete",style: TextStyle(color: Colors.black),),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )));
+              }
+              ).toList(),
+            );
+        }
+      },
+    );
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
      iconCounter = 0;
     return new Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.amberAccent,
       body:
       Column(children: <Widget>[
 //        Text("Marker list: "),
@@ -336,192 +521,12 @@ class MapSampleState extends State<MapSample> {
           child: SizedBox(
             height: screenHeight(context, dividedBy: 4),
 //            width: screenWidth(context, dividedBy: 1.1),
-            child:
-            StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('test').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError)
-                  return new Text('Error: ${snapshot.error}');
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return new SpinKitChasingDots(
-                      color: Colors.yellow, size: 50, duration: new Duration(seconds: 3),);
-                  default:
-//                    card ListView
-                    return new ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: snapshot.data.documents.map((DocumentSnapshot document) {
+            child: listWidget(),
 
-
-
-
-
-                        var latitude = document['location'].latitude;
-                        var longitude = document['location'].longitude;
-                        print("condition: " + condition.toString());
-
-                        var temp = condition.toString();
-                        print(temp);
-
-                        // init card icon
-                        var cardIcon;
-                        // init card color
-                        var cardColor;
-
-                        //  Conditions for card icons and color from OpenWeatherMap
-
-                        if(conditionsMap[iconCounter].toString() == "clear sky"){
-                          cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
-                          cardColor = Colors.yellow;
-                        }
-
-                        else if(conditionsMap[iconCounter].toString() == "scattered clouds"){
-                          cardIcon = Icon(WeatherIcons.day_cloudy_high, color: Colors.black,);
-                          cardColor = Colors.grey;
-
-                        }
-                        else if(conditionsMap[iconCounter].toString() == "few clouds"){
-                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                          cardColor = Colors.lightBlueAccent;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "scattered clouds"){
-                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                          cardColor = Colors.green;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "broken clouds"){
-                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                          cardColor = Colors.blueGrey;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "overcast clouds"){
-                          cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
-                          cardColor = Colors.grey;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "rain"){
-                          cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
-                          cardColor = Colors.blueAccent;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "light rain"){
-                          cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
-                          cardColor = Colors.blue;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "thunderstorm"){
-                          cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors.black,);
-                          cardColor = Colors.lightBlueAccent;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "snow"){
-                          cardIcon = Icon(WeatherIcons.day_snow, color: Colors.black,);
-                          cardColor = Colors.lime;
-
-                        }
-                        else if(conditionsMap[iconCounter ].toString() == "mist"){
-                          cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
-                          cardColor = Colors.teal;
-
-                        }
-
-                        else
-                          {
-                            cardIcon = Icon(Icons.error, color: Colors.black,);
-                          }
-
-
-//                        DEBUG PRINTS:
-//                        print("2:" + conditionsMap.toString());
-
-//                        print(i);
-                        iconCounter++; // we increment int here when we build a card
-
-//                        TODO: IM NOT CONVINCED THE DESCRIPTION VARIABLE IS WORKING HOW IT SHOULD HERE
-
-
-                      return Card(
-
-//                        color: Colors.blueGrey,
-                          color: cardColor,
-
-                          child: Container(
-                              padding: const EdgeInsets.only(top: 1.0),
-                              child: Column(
-                                children: <Widget>[
-                                  Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
-                                  cardIcon,
-                                  SizedBox(height: 3), //separator and spa
-                                  Text("conditions: \n" + conditionsMap[iconCounter - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
-
-
-//
-                                  SizedBox(height: 5), //separator and spacer
-                                  SizedBox(
-                                    height: 30,
-                                    child: RaisedButton(
-                                      color: cardColor,
-                                      elevation: 12,
-                                      onPressed: () {
-                                        Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-
-                                        getCamera_on_Marker(document['location']);
-                                      },
-                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
-                                      child: Container(
-                                        child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,), //separator and spacer
-                                  SizedBox(
-                                    height: 20,
-                                    child: RaisedButton(
-                                      color: cardColor,
-                                      elevation: 12,
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => SecondPage(
-                                                    title: document['address'], description: document['address'])));
-
-                                      },
-                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
-                                      child: Container(
-                                        child: Text("More info",style: TextStyle(color: Colors.black),),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,), //separator and spacer
-                                  SizedBox(
-                                    height: 20,
-                                    child: RaisedButton(
-                                      color: cardColor,
-                                      elevation: 12,
-                                      onPressed: () {
-                                        deleteMarker(document.documentID);
-                                        re_InitilizeMap();
-                                      },
-                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
-                                      child: Container(
-                                        child: Text("Delete",style: TextStyle(color: Colors.black),),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )));
-                      }
-                      ).toList(),
-                    );
-                }
-              },
-            ),
           ),
         ),
 
-        SizedBox(height: 70, child: Text("empty space", style: TextStyle(color: Colors.black),),), // space between list and map
+        SizedBox(height: 70, child: Text("its free realstate ;)", style: TextStyle(color: Colors.black),),), // space between list and map
 
         Container(
           margin: const EdgeInsets.all(1.0),
