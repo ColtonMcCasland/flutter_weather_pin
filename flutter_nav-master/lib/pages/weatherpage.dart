@@ -17,109 +17,66 @@ import 'package:http/http.dart' as http;
 //TODO: have each marker lat and long passed to the openweather query and create tiles for a list view of all the marker locations current weather.
 //api key: 34cd503973bce95c2e833573eb0d9561
 
-class weatherPage extends StatelessWidget {
+class weatherPage extends StatefulWidget {
   static const String routeName = '/weather';
 
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Text("Map"),
-      ),
-      body: new weatherNews(),
-    );
-  }
+
 
   @override
-  _weatherNewsPageState createState() => _weatherNewsPageState();
+  weatherNewsPage createState() => weatherNewsPage();
 }
 
-class weatherNewsPage extends StatelessWidget {
+class weatherNewsPage extends State<weatherPage> {
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Text("Map"),
-      ),
-      body: new weatherNews(),
-    );
-  }
-
-}
-
-class weatherNews extends StatefulWidget {
-  @override
-  State<weatherNews> createState() => _weatherNewsPageState();
-}
-
-class _weatherNewsPageState extends State<weatherNews> {
- String _locality = '';
-  String _weather = '';
-
-  Future<Position> getPosition() async {
-    Position position = await Geolocator()
-      .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    return position;
-  }
-
-  Future<Placemark> getPlacemark(double latitude, double longitude) async {
-    List<Placemark> placemark = await Geolocator()
-      .placemarkFromCoordinates(latitude, longitude);
-    return placemark[0];
-  }
-
-  Future<String> getData(double latitude, double longitude) async {
-    String api = 'http://api.openweathermap.org/data/2.5/forecast';
-    String appId = '34cd503973bce95c2e833573eb0d9561';
-
-    String url = '$api?lat=$latitude&lon=$longitude&APPID=$appId';
-
-    http.Response response = await http.get(url);
-
-    Map parsed = json.decode(response.body);
-
-    return parsed['list'][0]['weather'][0]['description'];
-  }
+  String _res = 'Unknown';
+  String key = '12b6e28582eb9298577c734a31ba9f4f';
+  WeatherStation ws;
 
   @override
   void initState() {
     super.initState();
-    getPosition().then((position) {
-      getPlacemark(position.latitude, position.longitude).then((data) {
-        getData(position.latitude, position.longitude).then((weather) {
-          setState(() {
-            _locality = data.locality;
-            _weather = weather;
-          });
-        });
-      });
+    ws = new WeatherStation(key);
+    initPlatformState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    queryWeather();
+  }
+
+  void queryForecast() async {
+    List<Weather> f = await ws.fiveDayForecast();
+    setState(() {
+      _res = f.toString();
+    });
+  }
+
+  void queryWeather() async {
+    Weather w = await ws.currentWeather();
+    setState(() {
+      _res = w.toString();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('My Weather App'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '$_locality',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            Text(
-              '$_weather',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Weather API Example"),
         ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                _res,
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(onPressed: queryWeather, child: Icon(Icons.cloud_download)),
       ),
     );
   }

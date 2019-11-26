@@ -8,20 +8,21 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:location/location.dart';
 import 'package:weather/weather.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:toast/toast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:f_nav/weather_request.dart';
 
 import 'package:weather_icons/weather_icons.dart';
 
 
 
-import 'package:simple_moment/simple_moment.dart';
-import 'package:transparent_image/transparent_image.dart';
 import 'package:f_nav/pages/secondPage.dart';
+const apiKey = 'c287f389370cfc2c227abf41d002858d';
+
 
 class MapsPage extends StatelessWidget {
+
   static const String routeName = '/map';
 
   final title = "Notifications Page";
@@ -61,21 +62,22 @@ class MapSampleState extends State<MapSample> {
   WeatherStation weatherStation = new WeatherStation(
       "34cd503973bce95c2e833573eb0d9561");
 
-  String _locality = null;
-  String _weather = null;
-
-  var _currentTask;
-
   //  title controller
   final _titleController = TextEditingController();
 //  description controller
   final _descriptionController = TextEditingController();
 //  due date controller
-  final _dueDateController = TextEditingController();
 
-// vars to check for emptie fields.
+// vars to check for empty fields.
   bool _validate1 = false;
   bool _validate2 = false;
+
+  var condition;
+
+  int i =0;
+
+  List<String> conditionsMap = [];
+
 
 
 
@@ -86,7 +88,6 @@ class MapSampleState extends State<MapSample> {
   Set<Icon> icons = Set();
 
   Position position;
-  Firestore _firestore = Firestore.instance;
   Location location = Location();
   Map<String, double> currentLocation;
   Completer<GoogleMapController> _controller = Completer();
@@ -96,6 +97,12 @@ class MapSampleState extends State<MapSample> {
   String _address;
   String inputaddr = '';
   Colors inputcolor;
+
+  String user_uid, user_display_name;
+
+  double _lat, _lng;
+
+
 
 
 //   run function on loop
@@ -130,58 +137,122 @@ class MapSampleState extends State<MapSample> {
     _titleController.text = inputaddr;
     _descriptionController.text = inputaddr;
 
+
+
   }
 
+  double latitude;
+  double longitude;
+
+
+   getDataWeather(latitude,longitude) async {
+
+    WeatherRequest weatherRequest = WeatherRequest(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
+    var weatherdata = await weatherRequest.getData();
+
+
+
+
+//   TODO: parse json here and grab info for card Icons
+    var whole = weatherdata["weather"][0]['description'];
+    //outputs weather description
+
+//     print(whole.toString());
+//     print("Saved:"+ "$latitude & $longitude " + description);
+
+     setState(() {
+
+       //     TODO: Save description to array from here
+       condition = whole.toString();
+
+       conditionsMap.add(whole.toString());
+       print(conditionsMap.toString());
+
+
+
+     });
+
+
+
+  return whole.toString();
+
+    print(whole.toString());
+//    print("Entry: " + weatherdata.toString());
+
+  }
+
+  Future<String> getData(double latitude, double longitude) async {
+    String api = 'http://api.openweathermap.org/data/2.5/forecast';
+    String appId = '34cd503973bce95c2e833573eb0d9561';
+
+    String url = '$api?lat=$latitude&lon=$longitude&APPID=$appId';
+
+    http.Response response = await http.get(url);
+
+    Map parsed = json.decode(response.body);
+
+    return parsed['list'][0]['weather'][0]['description'];
+  }
+
+
   void re_InitilizeMap() {
+     markers.clear();
+     conditionsMap.clear();
     getCurrentLocation();
     populateMap_w_Markers();
     super.initState();
+     i=0;
+
   }
 
   @override
   void dispose() {
     markers.clear();
+    conditionsMap.clear();
     icons.clear();
     super.dispose();
     _titleController.clear();
     _descriptionController.clear();
-    _dueDateController.clear();
+    i=0;
   }
 
-  _onMapTypeButtonPressed() {
-    setState(() {
-      _currentMapType = _currentMapType == MapType.normal
-          ? MapType.satellite
-          : MapType.normal;
+
+  void initMarker(request, requestId) async {
+    var markerIdVal = requestId;
+    final MarkerId markerId = MarkerId(markerIdVal);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      position: LatLng(
+          request['location'].latitude, request['location'].longitude),
+      icon: BitmapDescriptor.defaultMarker,
+      infoWindow: InfoWindow(
+          title: 'Test title', snippet: 'Message: ' + request['address']),
+    );
+
+
+
+    await setState(() {
+      condition = getDataWeather(request['location'].latitude,request['location'].longitude);
+
+
+
+      markers.add(marker);
+
     });
   }
 
-
-  Widget mapWidget() {
-    return GoogleMap(
-
-      myLocationButtonEnabled: false,
-      onCameraMove: _onCameraMove,
-
-      myLocationEnabled: true,
-
-      compassEnabled: true,
-      mapToolbarEnabled: false,
-
-      rotateGesturesEnabled: false,
-      markers: markers,
-      mapType: _currentMapType,
-      initialCameraPosition: CameraPosition(
-          target: LatLng(_lat, _lng), zoom: 10),
-      onMapCreated:
-          (GoogleMapController controller) {
-        _controller.complete(controller);
-        re_InitilizeMap();
-      },
-    );
+  void getAddress(double latitude, double longitude) async {
+    placemark =
+    await Geolocator().placemarkFromCoordinates(latitude, longitude);
+    _address =
+        placemark[0].name.toString() + "," + placemark[0].locality.toString() +
+            ", Postal Code:" + placemark[0].postalCode.toString();
+    setState(() {
+      _map = mapWidget();
+    });
   }
-
-  double _lat, _lng;
 
   void getCurrentLocation() async {
     Position res = await Geolocator().getCurrentPosition();
@@ -205,109 +276,51 @@ class MapSampleState extends State<MapSample> {
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(location.latitude, location.longitude), zoom: 8.0,)
-        ),
-
-
+      CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(location.latitude, location.longitude), zoom: 8.0,)
+      ),
     );
   }
 
-  populateMap_w_Markers() {
+  void populateMap_w_Markers() {
     print("loading markers...");
 
     Firestore.instance.collection('test').getDocuments().then((docs) {
       if (docs.documents.isNotEmpty) {
         for (int i = 0; i < docs.documents.length; i++) {
           initMarker(docs.documents[i].data, docs.documents[i].documentID);
-//          initMarkerWeatherCardIcon(docs.documents[i].data, docs.documents[i].documentID);
+
         }
       }
     });
   }
 
-  void getAddress(double latitude, double longitude) async {
-    placemark =
-    await Geolocator().placemarkFromCoordinates(latitude, longitude);
-    _address =
-        placemark[0].name.toString() + "," + placemark[0].locality.toString() +
-            ", Postal Code:" + placemark[0].postalCode.toString();
-    setState(() {
-      _map = mapWidget();
-    });
-  }
+  Widget mapWidget() {
+    return GoogleMap(
 
-  Future<String> getData(double latitude, double longitude) async {
-    String api = 'http://api.openweathermap.org/data/2.5/forecast';
-    String appId = '34cd503973bce95c2e833573eb0d9561';
+      myLocationButtonEnabled: false,
+      onCameraMove: _onCameraMove,
 
-    String url = '$api?lat=$latitude&lon=$longitude&APPID=$appId';
+      myLocationEnabled: true,
 
-    http.Response response = await http.get(url);
+      compassEnabled: true,
+      mapToolbarEnabled: false,
 
-    Map parsed = json.decode(response.body);
-
-    return parsed['list'][0]['weather'][0]['description'];
-  }
-
-  void initMarker(request, requestId) async {
-    var markerIdVal = requestId;
-    final MarkerId markerId = MarkerId(markerIdVal);
-
-    final Marker marker = Marker(
-      markerId: markerId,
-      position: LatLng(
-          request['location'].latitude, request['location'].longitude),
-      icon: BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(
-          title: 'Test title', snippet: 'Message: ' + request['address']),
+      rotateGesturesEnabled: false,
+      markers: markers,
+      mapType: _currentMapType,
+      initialCameraPosition: CameraPosition(
+          target: LatLng(_lat, _lng), zoom: 10),
+      onMapCreated:
+          (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
     );
-
-    await setState(() {
-
-      markers.add(marker);
-
-      getData(request['location'].latitude, request['location'].longitude).then((weather) {
-      });
-    });
   }
-
-//  void initMarkerWeatherCardIcon(request, requestId) async {
-//    var markerIdVal = requestId;
-//    final MarkerId markerId = MarkerId(markerIdVal);
-//
-////    final Marker marker = Marker(
-////      markerId: markerId,
-////      position: LatLng(
-////          request['location'].latitude, request['location'].longitude),
-////      icon: BitmapDescriptor.defaultMarker,
-////      infoWindow: InfoWindow(
-////          title: 'Test title', snippet: 'Message: ' + request['address']),
-////    );
-//
-//    getData(request['location'].latitude, request['location'].longitude).then((weather) {
-////          _locality = data.locality;
-//
-//      _weather = weather;
-////        icons.add(Icon(Icons.clear));
-//      print(weather);
-//    });
-//
-//    await setState(() {
-//
-////      markers.add(marker);
-//
-//
-//    });
-//  }
-
-
-
-
-
 
 
   @override
   Widget build(BuildContext context) {
+     i = 0;
     return new Scaffold(
 //      backgroundColor: Colors.white,
       body:
@@ -319,67 +332,78 @@ class MapSampleState extends State<MapSample> {
             width: screenWidth(context, dividedBy: 1.1),
             child:
             StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('test')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: Firestore.instance.collection('test').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError)
                   return new Text('Error: ${snapshot.error}');
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                     return new Text('Loading...');
                   default:
+//                    card ListView
                     return new ListView(
                       scrollDirection: Axis.horizontal,
                       children: snapshot.data.documents.map((DocumentSnapshot document) {
 
-//                        potential control of card color by user preference
-                        var cardColor = null;
 
-//                        cardColor = document['color'];
-
-                        // init card icon example
-                        var cardIcon = Icon(WeatherIcons.day_snow);
 
 
 
                         var latitude = document['location'].latitude;
                         var longitude = document['location'].longitude;
+                        print("condition: " + condition.toString());
 
-//
+                        var temp = condition.toString();
+                        print(temp);
+
+                        // init card icon example
+                        var cardIcon;
+
+                        var cardColor;
+
+                        if(conditionsMap[i ].toString() == "clear sky"){
+                          cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
+                          cardColor = Colors.orange;
+                        }
+                        else if(conditionsMap[i ].toString() == "scattered clouds"){
+                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                        }
+
+                        else
+                          {
+                            cardIcon = Icon(Icons.error, color: Colors.black,);
+                          }
 
 
+//                        DEBUG PRINTS:
+//                        print("2:" + conditionsMap.toString());
 
-                        //decide what to make it.
+//                        print(i);
+                        i++; // we increment int here when we build a card
 
-//                        if(document['location'].latitude < 37.7)
-//                        {
-//                          cardIcon = Icon(Icons.train);
-//                        }
-//                        else
-//                          cardIcon = Icon(Icons.terrain);
-
+//                        TODO: IM NOT CONVINCED THE DESCRIPTION VARIABLE IS WORKING HOW IT SHOULD HERE
 
 
                       return Card(
 
-                        color: Colors.blueGrey,
+//                        color: Colors.blueGrey,
+                          color: cardColor,
 
                           child: Container(
-                            color: cardColor,
                               padding: const EdgeInsets.only(top: 1.0),
                               child: Column(
                                 children: <Widget>[
-                                  Text("Title: " + document['address']),
-//                                  Text(_weather.toString()),
+                                  Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
+                                  Text("conditions: " + conditionsMap[i - 1], style: TextStyle(color: Colors.black),), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
                                   cardIcon,
                                   FlatButton(
-                                      child: Text("Address: " + document['address']),
+                                      child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
 
                                       onPressed: ()
                                       {
 
                                         Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+
                                         getCamera_on_Marker(document['location']);
 //                                        Navigator.push(
 //                                            context,
@@ -408,7 +432,9 @@ class MapSampleState extends State<MapSample> {
                                   ),
                                 ],
                               )));
-                      }).toList(),
+                      }
+
+                      ).toList(),
                     );
                 }
               },
@@ -423,17 +449,9 @@ class MapSampleState extends State<MapSample> {
           ),
           child: SizedBox(
         height: screenHeight(context,
-            dividedBy: 2),
+            dividedBy: 1.7),
         child:_map,
         ),),
-
-//        Expanded(
-//
-//          child: ListView(
-//            children:_buildContainer(),
-//          ),
-//        )
-
       ]
       ), //map
       floatingActionButton: _getMapButtons(), //buttons
@@ -441,7 +459,6 @@ class MapSampleState extends State<MapSample> {
   }
 
 
-  String user_uid, user_display_name;
 
   /// Post to Firebase DB
   addToList(lat, long) async {
@@ -454,6 +471,16 @@ class MapSampleState extends State<MapSample> {
         'address': inputaddr,
       });
     }
+  }
+
+  Future<void> _goToUser() async {
+
+    final GoogleMapController controller = await _controller.future;
+
+    controller.animateCamera(
+        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 15.0,)
+        )
+    );
   }
 
 
@@ -523,21 +550,13 @@ class MapSampleState extends State<MapSample> {
 
 }
 
-  Future<void> _goToUser() async {
 
-    final GoogleMapController controller = await _controller.future;
-
-    controller.animateCamera(
-        CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 15.0,)
-        )
-    );
-  }
 
   Widget _getMapButtons() {
     return SpeedDial(
       animatedIcon: AnimatedIcons.menu_close,
-      animatedIconTheme: IconThemeData(size: 22),
-      backgroundColor: Colors.blue,
+      animatedIconTheme: IconThemeData(size: 22,color: Colors.white),
+      backgroundColor: Colors.black,
       visible: true,
       curve: Curves.bounceIn,
       children:
@@ -574,6 +593,8 @@ class MapSampleState extends State<MapSample> {
               }
               else
               addMarker(_lastMapPosition.latitude,_lastMapPosition.longitude);
+              _titleController.clear();
+              _descriptionController.clear();
 
               },
             label: 'Drop pin',
