@@ -177,8 +177,6 @@ class MapSampleState extends State<MapSample> {
 
   return whole.toString();
 
-    print(whole.toString());
-//    print("Entry: " + weatherdata.toString());
 
   }
 
@@ -294,6 +292,11 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+    Future<void> deleteMarker(String documentId){
+      return  Firestore.instance.collection('test').document(documentId).delete();
+    }
+
+
   Widget mapWidget() {
     return GoogleMap(
 
@@ -327,9 +330,12 @@ class MapSampleState extends State<MapSample> {
       Column(children: <Widget>[
 //        Text("Marker list: "),
         Container(
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.amber, width: 5.0,)
+          ),
           child: SizedBox(
             height: screenHeight(context, dividedBy: 4),
-            width: screenWidth(context, dividedBy: 1.1),
+//            width: screenWidth(context, dividedBy: 1.1),
             child:
             StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('test').snapshots(),
@@ -374,7 +380,7 @@ class MapSampleState extends State<MapSample> {
                         }
                         else if(conditionsMap[i ].toString() == "few clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                          cardColor = Colors.grey;
+                          cardColor = Colors.lightBlueAccent;
 
                         }
                         else if(conditionsMap[i ].toString() == "scattered clouds"){
@@ -384,15 +390,20 @@ class MapSampleState extends State<MapSample> {
                         }
                         else if(conditionsMap[i ].toString() == "broken clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                          cardColor = Colors.red;
+                          cardColor = Colors.blueGrey;
 
                         }
-                        else if(conditionsMap[i ].toString() == "overcast clouds:"){
+                        else if(conditionsMap[i ].toString() == "overcast clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
-                          cardColor = Colors.teal;
+                          cardColor = Colors.grey;
 
                         }
                         else if(conditionsMap[i ].toString() == "rain"){
+                          cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
+                          cardColor = Colors.blueAccent;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "light rain"){
                           cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
                           cardColor = Colors.blue;
 
@@ -438,46 +449,84 @@ class MapSampleState extends State<MapSample> {
                               child: Column(
                                 children: <Widget>[
                                   Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
-                                  Text("conditions: " + conditionsMap[i - 1], style: TextStyle(color: Colors.black),), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
                                   cardIcon,
-                                  FlatButton(
-                                      child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
+                                  SizedBox(height: 3), //separator and spa
+                                  Text("conditions: \n" + conditionsMap[i - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
-                                      onPressed: ()
-                                      {
 
+//                                  FlatButton(
+//
+//                                    child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
+//
+//                                      onPressed: ()
+//                                      {
+//
+//                                        Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+//
+//                                        getCamera_on_Marker(document['location']);
+////                                        Navigator.push(
+////                                            context,
+////                                            MaterialPageRoute(
+////                                                builder: (context) => SecondPage(
+////                                                    title: document['address'], description: document['address'])));
+//                                      }
+//                                  ),
+                                  SizedBox(height: 5), //separator and spacer
+                                  SizedBox(
+                                    height: 30,
+                                    child: RaisedButton(
+                                      color: cardColor,
+                                      elevation: 12,
+                                      onPressed: () {
                                         Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
 
                                         getCamera_on_Marker(document['location']);
-//                                        Navigator.push(
-//                                            context,
-//                                            MaterialPageRoute(
-//                                                builder: (context) => SecondPage(
-//                                                    title: document['address'], description: document['address'])));
-                                      }
+                                      },
+                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                      child: Container(
+                                        child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
+                                      ),
+                                    ),
                                   ),
-                                  FlatButton(
-                                      child: Text("More Weather info"),
-//                                      bring user to page where openWeatherMap is called on the lat and long.
-//                                      it would take too long to send http posts to check each marker status when opening main page.
+                                  SizedBox(height: 5,), //separator and spacer
+                                  SizedBox(
+                                    height: 20,
+                                    child: RaisedButton(
+                                      color: cardColor,
+                                      elevation: 12,
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => SecondPage(
+                                                    title: document['address'], description: document['address'])));
 
-                                      onPressed: ()
-                                      {
-
-//                                        Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-//                                        getCamera_on_Marker(document['location']);
-
-//                                        Navigator.push(
-//                                            context,
-//                                            MaterialPageRoute(
-//                                                builder: (context) => SecondPage(
-//                                                    title: document['address'], description: document['address'])));
-                                      }
+                                      },
+                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                      child: Container(
+                                        child: Text("More info",style: TextStyle(color: Colors.black),),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5,), //separator and spacer
+                                  SizedBox(
+                                    height: 20,
+                                    child: RaisedButton(
+                                      color: cardColor,
+                                      elevation: 12,
+                                      onPressed: () {
+                                        deleteMarker(document.documentID);
+                                        re_InitilizeMap();
+                                      },
+                                      padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
+                                      child: Container(
+                                        child: Text("Delete",style: TextStyle(color: Colors.black),),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               )));
                       }
-
                       ).toList(),
                     );
                 }
@@ -489,12 +538,14 @@ class MapSampleState extends State<MapSample> {
           margin: const EdgeInsets.all(1.0),
           padding: const EdgeInsets.all(13.0),
           decoration: BoxDecoration(
-//              border: Border.all(color: Colors.amber, width: 15.0,)
+              border: Border(
+                bottom: BorderSide(color: Colors.black, width: 14.8)
+              )
           ),
           child: SizedBox(
         height: screenHeight(context,
-            dividedBy: 1.7),
-        child:_map,
+            dividedBy: 1.8),
+        child: _map,
         ),),
       ]
       ), //map
