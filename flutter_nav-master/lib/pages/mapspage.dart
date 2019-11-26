@@ -361,12 +361,56 @@ class MapSampleState extends State<MapSample> {
 
                         var cardColor;
 
+
                         if(conditionsMap[i ].toString() == "clear sky"){
                           cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
-                          cardColor = Colors.orange;
+                          cardColor = Colors.yellow;
+                        }
+
+                        else if(conditionsMap[i ].toString() == "scattered clouds"){
+                          cardIcon = Icon(WeatherIcons.day_cloudy_high, color: Colors.black,);
+                          cardColor = Colors.grey;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "few clouds"){
+                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                          cardColor = Colors.grey;
+
                         }
                         else if(conditionsMap[i ].toString() == "scattered clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                          cardColor = Colors.green;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "broken clouds"){
+                          cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                          cardColor = Colors.red;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "overcast clouds:"){
+                          cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
+                          cardColor = Colors.teal;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "rain"){
+                          cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
+                          cardColor = Colors.blue;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "thunderstorm"){
+                          cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors.black,);
+                          cardColor = Colors.lightBlueAccent;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "snow"){
+                          cardIcon = Icon(WeatherIcons.day_snow, color: Colors.black,);
+                          cardColor = Colors.lime;
+
+                        }
+                        else if(conditionsMap[i ].toString() == "mist"){
+                          cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
+                          cardColor = Colors.teal;
+
                         }
 
                         else
