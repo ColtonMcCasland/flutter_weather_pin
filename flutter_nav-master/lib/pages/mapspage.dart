@@ -74,7 +74,7 @@ class MapSampleState extends State<MapSample> {
 
   var condition;
 
-  int i =0;
+  int iconCounter =0;
 
   List<String> conditionsMap = [];
 
@@ -200,7 +200,7 @@ class MapSampleState extends State<MapSample> {
     getCurrentLocation();
     populateMap_w_Markers();
     super.initState();
-     i=0;
+     iconCounter=0;
 
   }
 
@@ -212,7 +212,7 @@ class MapSampleState extends State<MapSample> {
     super.dispose();
     _titleController.clear();
     _descriptionController.clear();
-    i=0;
+    iconCounter=0;
   }
 
 
@@ -323,7 +323,7 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-     i = 0;
+     iconCounter = 0;
     return new Scaffold(
       backgroundColor: Colors.white,
       body:
@@ -344,7 +344,8 @@ class MapSampleState extends State<MapSample> {
                   return new Text('Error: ${snapshot.error}');
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return new Text('Loading...');
+                    return new SpinKitChasingDots(
+                      color: Colors.yellow, size: 50, duration: new Duration(seconds: 3),);
                   default:
 //                    card ListView
                     return new ListView(
@@ -362,63 +363,64 @@ class MapSampleState extends State<MapSample> {
                         var temp = condition.toString();
                         print(temp);
 
-                        // init card icon example
+                        // init card icon
                         var cardIcon;
-
+                        // init card color
                         var cardColor;
 
+                        //  Conditions for card icons and color from OpenWeatherMap
 
-                        if(conditionsMap[i ].toString() == "clear sky"){
+                        if(conditionsMap[iconCounter].toString() == "clear sky"){
                           cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
                           cardColor = Colors.yellow;
                         }
 
-                        else if(conditionsMap[i ].toString() == "scattered clouds"){
+                        else if(conditionsMap[iconCounter].toString() == "scattered clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy_high, color: Colors.black,);
                           cardColor = Colors.grey;
 
                         }
-                        else if(conditionsMap[i ].toString() == "few clouds"){
+                        else if(conditionsMap[iconCounter].toString() == "few clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
                           cardColor = Colors.lightBlueAccent;
 
                         }
-                        else if(conditionsMap[i ].toString() == "scattered clouds"){
+                        else if(conditionsMap[iconCounter ].toString() == "scattered clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
                           cardColor = Colors.green;
 
                         }
-                        else if(conditionsMap[i ].toString() == "broken clouds"){
+                        else if(conditionsMap[iconCounter ].toString() == "broken clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
                           cardColor = Colors.blueGrey;
 
                         }
-                        else if(conditionsMap[i ].toString() == "overcast clouds"){
+                        else if(conditionsMap[iconCounter ].toString() == "overcast clouds"){
                           cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
                           cardColor = Colors.grey;
 
                         }
-                        else if(conditionsMap[i ].toString() == "rain"){
+                        else if(conditionsMap[iconCounter ].toString() == "rain"){
                           cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
                           cardColor = Colors.blueAccent;
 
                         }
-                        else if(conditionsMap[i ].toString() == "light rain"){
+                        else if(conditionsMap[iconCounter ].toString() == "light rain"){
                           cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
                           cardColor = Colors.blue;
 
                         }
-                        else if(conditionsMap[i ].toString() == "thunderstorm"){
+                        else if(conditionsMap[iconCounter ].toString() == "thunderstorm"){
                           cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors.black,);
                           cardColor = Colors.lightBlueAccent;
 
                         }
-                        else if(conditionsMap[i ].toString() == "snow"){
+                        else if(conditionsMap[iconCounter ].toString() == "snow"){
                           cardIcon = Icon(WeatherIcons.day_snow, color: Colors.black,);
                           cardColor = Colors.lime;
 
                         }
-                        else if(conditionsMap[i ].toString() == "mist"){
+                        else if(conditionsMap[iconCounter ].toString() == "mist"){
                           cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
                           cardColor = Colors.teal;
 
@@ -434,7 +436,7 @@ class MapSampleState extends State<MapSample> {
 //                        print("2:" + conditionsMap.toString());
 
 //                        print(i);
-                        i++; // we increment int here when we build a card
+                        iconCounter++; // we increment int here when we build a card
 
 //                        TODO: IM NOT CONVINCED THE DESCRIPTION VARIABLE IS WORKING HOW IT SHOULD HERE
 
@@ -451,26 +453,10 @@ class MapSampleState extends State<MapSample> {
                                   Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
                                   cardIcon,
                                   SizedBox(height: 3), //separator and spa
-                                  Text("conditions: \n" + conditionsMap[i - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
+                                  Text("conditions: \n" + conditionsMap[iconCounter - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
 
-//                                  FlatButton(
 //
-//                                    child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
-//
-//                                      onPressed: ()
-//                                      {
-//
-//                                        Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-//
-//                                        getCamera_on_Marker(document['location']);
-////                                        Navigator.push(
-////                                            context,
-////                                            MaterialPageRoute(
-////                                                builder: (context) => SecondPage(
-////                                                    title: document['address'], description: document['address'])));
-//                                      }
-//                                  ),
                                   SizedBox(height: 5), //separator and spacer
                                   SizedBox(
                                     height: 30,

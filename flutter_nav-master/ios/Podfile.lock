@@ -85,7 +85,7 @@ PODS:
     - FirebaseCore (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
-  - geolocator (5.1.4):
+  - geolocator (5.1.5):
     - Flutter
   - google_api_availability (2.0.1):
     - Flutter
@@ -170,7 +170,7 @@ DEPENDENCIES:
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - BoringSSL-GRPC
     - Firebase
     - FirebaseAnalytics
@@ -220,11 +220,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
-  cloud_firestore: 2d82a8ddea1ac2f535ec891ed68b5975fe4f9509
+  cloud_firestore: c6e28e89a1bf98faab7fc8fdec20dc6020799cd1
   Firebase: da031bc7012374e3bed17a6731b89327b29863b9
   firebase_auth: 7a2cc520766f90212b845a5b35316601707bfa25
-  firebase_core: ae55ea92448ec8675d325da4db22cf3b4d58a54d
-  firebase_storage: 52b0c06e27af628b627be28d32b4b540f6b67cf7
+  firebase_core: 971ffa0fb29e49b80a2ad295eb1ad1cdbd680ec4
+  firebase_storage: d83bfc0e0e849b2f871a34c474466bf5014ff304
   FirebaseAnalytics: 4e53a7eb7b76bc703c4d9239bc964545e9b23361
   FirebaseAuth: b401a012cc33b04df3b52bb308b04e8766f2693e
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
@@ -235,9 +235,9 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: ebd2ea79ee38db0cb5f5167b17a0d387e1cc7b6e
   FirebaseStorage: b7c6d00997bc21d4465453bdcc5cc65513110fed
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  geolocator: c98cc4a1f2558c11fa5db0fccad80883cde6eb4f
+  geolocator: 80aba2bb48f8c7dfc5a8b70b9d13fc3edc8399c4
   google_api_availability: 163b30f802e6148c67f092aa4501c90ddd8eec8d
-  google_maps_flutter: 78a52114c898b42ea647919679a4c58b70abe876
+  google_maps_flutter: d0dd62f5a7d39bae61057eb9f52dd778d99c7c6c
   GoogleAppMeasurement: 037f46d1d8ae8b312720f1042585ab961a1289e3
   GoogleDataTransport: 166f9b9f82cbf60a204e8fe2daa9db3e3ec1fb15
   GoogleDataTransportCCTSupport: f6ab1962e9dc05ab1fb938b795e5b310209edeec
@@ -255,4 +255,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 091f1b57aaebffcf04ec409c33ea6801c9622bcc
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4
