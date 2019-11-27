@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:f_nav/pages/mapspage.dart';
 import 'package:f_nav/pages/signup.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = '/logout';
@@ -66,14 +68,14 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
-      backgroundColor: Colors.amber,
+      backgroundColor: Colors.white,
       body: Form(
         child: ListView(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
               child: Icon(
-                Icons.wb_cloudy,
+                WeatherIcons.cloud_refresh,
 
                 size: 180.0,
                 color: Colors.black,
@@ -102,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.email,
+                      CupertinoIcons.mail,
                       color: Colors.black,
                     ),
                   ),
@@ -153,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.lock_open,
+                      CupertinoIcons.padlock,
                       color: Colors.black,
                     ),
                   ),
@@ -190,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                   Expanded(
                     child: FlatButton(
                       splashColor: Colors.black,
-                      color: Colors.black,
+                      color: Colors.white,
                       disabledColor: Colors.black.withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
@@ -211,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                                 'LOGIN',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ),

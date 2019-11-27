@@ -19,11 +19,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appTitle,
+
       theme : ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.dark,
-        primaryColor: Colors.amber,
-        accentColor: Colors.amberAccent,
+        primaryColor: Colors.white,
+        accentColor: Colors.white30,
 
         // Define the default font family.
         fontFamily: 'Montserrat',

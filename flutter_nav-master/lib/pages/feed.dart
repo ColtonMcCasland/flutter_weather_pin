@@ -201,13 +201,8 @@ class _FeedPageState extends State<FeedPage> {
 
         ),
 
-
-//          padding: const EdgeInsets.all(10.0),
-
-        child:
-        ListView( // parent ListView
+        child: ListView( // parent ListView
           children: <Widget>[
-
             Container(
               height: 750, // give it a fixed height constraint
               color: Colors.white,
@@ -226,17 +221,9 @@ class _FeedPageState extends State<FeedPage> {
         child: Icon(Icons.add),
         onPressed: () {
           _navigateToCreatePage();
-
-
         },
       ),
-
-
-
     );
-
-
-
   }
 
   var _container = Container(

@@ -14,6 +14,7 @@ import 'dart:convert';
 import 'package:f_nav/weather_request.dart';
 
 import 'package:weather_icons/weather_icons.dart';
+import 'package:flutter/cupertino.dart';
 
 
 
@@ -29,25 +30,40 @@ class MapsPage extends StatelessWidget {
   final description = "add content....";
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: AppDrawer(),
-      appBar: AppBar(
-        title: Text("Homepage"),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.notification_important), onPressed: ()
-          {
-            print("change list shown in view");
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SecondPage(
-                        title: title, description: description)));
-          }
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        backgroundColor: CupertinoColors.lightBackgroundGray,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home),
+            title: Text('Home'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.bluetooth),
+            title: Text('???'),
           ),
         ],
       ),
-      body:
-      new MapSample(),
+      tabBuilder: (context, index) {
+        return CupertinoTabView(
+          builder: (context) {
+            switch (index) {
+              case 0:
+                return MapSample();
+            ;
+                break;
+              case 1:
+                return Container();
+                break;
+              default:
+                return Container();
+            }
+          },
+        );
+      },
+
+//      body:
+//      new MapSample(),
     );
   }
 
@@ -124,21 +140,17 @@ class MapSampleState extends State<MapSample> {
 
   @override
   void initState() {
-    _map = SpinKitPouringHourglass(
-      color: Colors.yellow, size: 250, duration: new Duration(seconds: 1),);
+    _map = CupertinoActivityIndicator();
 
     getCurrentLocation();
     populateMap_w_Markers();
     super.initState();
 
-
-
     //    Connect Task text controllers to fields.
     _titleController.text = inputaddr;
     _descriptionController.text = inputaddr;
 
-
-
+    re_InitilizeMap();
   }
 
   double latitude;
@@ -156,10 +168,7 @@ class MapSampleState extends State<MapSample> {
 
 //   TODO: parse json here and grab info for card Icons
     var whole = weatherdata["weather"][0]['description'];
-    //outputs weather description
 
-//     print(whole.toString());
-//     print("Saved:"+ "$latitude & $longitude " + description);
 
      setState(() {
 
@@ -167,16 +176,10 @@ class MapSampleState extends State<MapSample> {
        condition = whole.toString();
 
        conditionsMap.add(whole.toString());
-       print(conditionsMap.toString());
-
-
-
+       print("Array is: " + conditionsMap.toString());
      });
 
-
-
   return whole.toString();
-
 
   }
 
@@ -320,6 +323,14 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+  Widget _buildList(BuildContext context, DocumentSnapshot document) {
+    return ListTile(
+      title: Text("ex"),
+      subtitle: Text("test"),
+    );
+  }
+
+
   Widget listWidget(){
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('test').snapshots(),
@@ -328,21 +339,25 @@ class MapSampleState extends State<MapSample> {
           return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new SpinKitChasingDots(
-              color: Colors.yellow, size: 50, duration: new Duration(seconds: 3),);
+            return new CupertinoActivityIndicator();
           default:
-//                    card ListView
-            return new ListView(
+
+
+            // card ListView
+             return new ListView(
+
+
+
               scrollDirection: Axis.horizontal,
               children: snapshot.data.documents.map((DocumentSnapshot document) {
 
 
                 var latitude = document['location'].latitude;
                 var longitude = document['location'].longitude;
-                print("condition: " + condition.toString());
+//                print("condition: " + condition.toString());
 
                 var temp = condition.toString();
-                print(temp);
+//                print(temp);
 
                 // init card icon
                 var cardIcon;
@@ -350,76 +365,69 @@ class MapSampleState extends State<MapSample> {
                 var cardColor;
 
                 //  Conditions for card icons and color from OpenWeatherMap
+                if(conditionsMap[iconCounter].isNotEmpty && conditionsMap[iconCounter].length != 0 ) {
+                  if (conditionsMap[iconCounter] == "clear sky") {
+                    cardIcon = Icon(
+                      WeatherIcons.day_sunny_overcast, color: Colors.black,);
+                    cardColor = Colors.yellow;
+                  }
 
-                if(conditionsMap[iconCounter].toString() == "clear sky"){
-                  cardIcon = Icon(WeatherIcons.day_sunny_overcast, color: Colors.black,);
-                  cardColor = Colors.yellow;
+                  else if (conditionsMap[iconCounter] == "scattered clouds") {
+                    cardIcon = Icon(
+                      WeatherIcons.day_cloudy_high, color: Colors.black,);
+                    cardColor = Colors.grey;
+                  }
+                  else if (conditionsMap[iconCounter] == "few clouds") {
+                    cardIcon =
+                        Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                    cardColor = Colors.lightBlueAccent;
+                  }
+                  else if (conditionsMap[iconCounter ] == "scattered clouds") {
+                    cardIcon =
+                        Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                    cardColor = Colors.green;
+                  }
+                  else if (conditionsMap[iconCounter ] == "broken clouds") {
+                    cardIcon =
+                        Icon(WeatherIcons.day_cloudy, color: Colors.black,);
+                    cardColor = Colors.blueGrey;
+                  }
+                  else if (conditionsMap[iconCounter ] == "overcast clouds") {
+                    cardIcon = Icon(
+                      WeatherIcons.day_cloudy_gusts, color: Colors.black,);
+                    cardColor = Colors.grey;
+                  }
+                  else if (conditionsMap[iconCounter ] == "rain") {
+                    cardIcon = Icon(WeatherIcons.day_rain, color: Colors
+                        .black,);
+                    cardColor = Colors.blueAccent;
+                  }
+                  else if (conditionsMap[iconCounter ] == "light rain") {
+                    cardIcon = Icon(WeatherIcons.day_rain, color: Colors
+                        .black,);
+                    cardColor = Colors.blue;
+                  }
+                  else if (conditionsMap[iconCounter ] == "thunderstorm") {
+                    cardIcon = Icon(WeatherIcons.day_thunderstorm,
+                      color: Colors.black,);
+                    cardColor = Colors.lightBlueAccent;
+                  }
+                  else if (conditionsMap[iconCounter ] == "snow") {
+                    cardIcon = Icon(
+                      WeatherIcons.day_snow, color: Colors.black,);
+                    cardColor = Colors.lime;
+                  }
+                  else if (conditionsMap[iconCounter ] == "mist") {
+                    cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
+                    cardColor = Colors.teal;
+                  }
+
+                  else {
+                    cardIcon = Icon(Icons.error, color: Colors.black,);
+                  }
                 }
 
-                else if(conditionsMap[iconCounter].toString() == "scattered clouds"){
-                  cardIcon = Icon(WeatherIcons.day_cloudy_high, color: Colors.black,);
-                  cardColor = Colors.grey;
-
-                }
-                else if(conditionsMap[iconCounter].toString() == "few clouds"){
-                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                  cardColor = Colors.lightBlueAccent;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "scattered clouds"){
-                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                  cardColor = Colors.green;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "broken clouds"){
-                  cardIcon = Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                  cardColor = Colors.blueGrey;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "overcast clouds"){
-                  cardIcon = Icon(WeatherIcons.day_cloudy_gusts, color: Colors.black,);
-                  cardColor = Colors.grey;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "rain"){
-                  cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
-                  cardColor = Colors.blueAccent;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "light rain"){
-                  cardIcon = Icon(WeatherIcons.day_rain, color: Colors.black,);
-                  cardColor = Colors.blue;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "thunderstorm"){
-                  cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors.black,);
-                  cardColor = Colors.lightBlueAccent;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "snow"){
-                  cardIcon = Icon(WeatherIcons.day_snow, color: Colors.black,);
-                  cardColor = Colors.lime;
-
-                }
-                else if(conditionsMap[iconCounter ].toString() == "mist"){
-                  cardIcon = Icon(WeatherIcons.day_fog, color: Colors.black,);
-                  cardColor = Colors.teal;
-
-                }
-
-                else
-                {
-                  cardIcon = Icon(Icons.error, color: Colors.black,);
-                }
-
-
-//                        DEBUG PRINTS:
-//                        print("2:" + conditionsMap.toString());
-
-//                        print(i);
                 iconCounter++; // we increment int here when we build a card
-
-//                        TODO: IM NOT CONVINCED THE DESCRIPTION VARIABLE IS WORKING HOW IT SHOULD HERE
 
 
                 return Card(
@@ -428,36 +436,34 @@ class MapSampleState extends State<MapSample> {
                     ),
 
 //                        color: Colors.blueGrey,
-                    color: cardColor,
+                    color: cardColor ?? Colors.blueGrey,
 
                     child: Container(
                         padding: const EdgeInsets.only(top: 1.0),
                         child: Column(
                           children: <Widget>[
-                            Text("Marker: " + document['address'], style: TextStyle(color: Colors.black),),
-                            cardIcon,
+                            Text("Marker: " + document['address'] ?? "", style: TextStyle(color: Colors.black),),
+                            cardIcon ?? Icons.pin_drop,
                             SizedBox(height: 3), //separator and spa
-                            Text("conditions: \n" + conditionsMap[iconCounter - 1], style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
+                            Text("conditions: \n" + conditionsMap[iconCounter - 1] ?? "null", style: TextStyle(color: Colors.black, fontSize: 12, ), ), //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
-
-//
                             SizedBox(height: 5), //separator and spacer
                             SizedBox(
                               height: 30,
-                              child: RaisedButton(
-                                color: cardColor,
-                                elevation: 12,
+                              child: CupertinoButton(
+                                color: Colors.white,
                                 onPressed: () {
-                                  Toast.show("Address: " + document['address'] + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+                                  Toast.show("Address: " + document['address'] ?? "" + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString() , context, duration: Toast.LENGTH_LONG, gravity:  Toast.TOP);
 
                                   getCamera_on_Marker(document['location']);
                                 },
                                 padding: EdgeInsets.all(0), // make the padding 0 so the child wont be dragged right by the default padding
                                 child: Container(
-                                  child: Text("Address: " + document['address'],style: TextStyle(color: Colors.black),),
+                                  child: Text("Address: " + document['address'] ?? "",style: TextStyle(color: Colors.black),),
                                 ),
                               ),
                             ),
+
                             SizedBox(height: 5,), //separator and spacer
                             SizedBox(
                               height: 20,
@@ -478,6 +484,7 @@ class MapSampleState extends State<MapSample> {
                                 ),
                               ),
                             ),
+
                             SizedBox(height: 5,), //separator and spacer
                             SizedBox(
                               height: 20,
@@ -495,7 +502,9 @@ class MapSampleState extends State<MapSample> {
                               ),
                             ),
                           ],
-                        )));
+                        )
+                    )
+                );
               }
               ).toList(),
             );
@@ -506,27 +515,25 @@ class MapSampleState extends State<MapSample> {
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
      iconCounter = 0;
-    return new Scaffold(
-      backgroundColor: Colors.amberAccent,
-      body:
+    return  CupertinoPageScaffold(
+      backgroundColor: Colors.white,
+      child:
       Column(children: <Widget>[
-//        Text("Marker list: "),
+        SizedBox(height: 20),
+//        Text("Marker list: ", style: TextStyle(color: Colors.black),),
         Container(
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.amber, width: 5.0,)
-          ),
           child: SizedBox(
             height: screenHeight(context, dividedBy: 4),
 //            width: screenWidth(context, dividedBy: 1.1),
             child: listWidget(),
-
           ),
         ),
 
-        SizedBox(height: 70, child: Text("its free realstate ;)", style: TextStyle(color: Colors.black),),), // space between list and map
 
         Container(
           margin: const EdgeInsets.all(1.0),
@@ -540,12 +547,88 @@ class MapSampleState extends State<MapSample> {
           )),
           child: SizedBox(
         height: screenHeight(context,
-            dividedBy: 2),
+            dividedBy: 2.5),
         child: _map,
         ),),
+        Row(
+            children: <Widget>[
+              Expanded(
+                  child:
+                  CupertinoButton(
+                    color: Colors.grey,
+                    disabledColor: Colors.black,
+                    pressedOpacity: .5,
+
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    child: const Icon(Icons.my_location),
+                    onPressed: () {
+
+                      _goToUser();
+
+                      setState(() {
+
+
+                      });
+                    },
+                  ),
+              ),
+              Expanded(
+                child:
+                CupertinoButton(
+                  color: Colors.grey,
+                  disabledColor: Colors.black,
+                  pressedOpacity: .5,
+
+                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                  child: const Icon(Icons.refresh),
+                  onPressed: () {
+
+                    re_InitilizeMap();
+
+
+                    setState(() {
+
+
+
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                child:
+                CupertinoButton(
+                  color: Colors.grey,
+                  disabledColor: Colors.black,
+                  pressedOpacity: .5,
+
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  child:  Icon(Icons.pin_drop),
+                  onPressed: () {
+
+                    if(_lastMapPosition.latitude == null){
+                      print("Error: tap performed on pin_drop while latitude what null!");
+                    }
+                    else
+                      addMarker(_lastMapPosition.latitude,_lastMapPosition.longitude);
+                    _titleController.clear();
+                    _descriptionController.clear();
+
+
+
+
+                    setState(() {
+
+
+
+                    });
+                  },
+                ),
+              ),
+                  ]
+        ),
       ]
       ), //map
-      floatingActionButton: _getMapButtons(), //buttons
+//      floatingActionButton: _getMapButtons(), //buttons
     );
   }
 
@@ -554,7 +637,7 @@ class MapSampleState extends State<MapSample> {
   /// Post to Firebase DB
   addToList(lat, long) async {
     if(lat == null || long == null ){
-      print("what!?");
+      print("ERROR: lat and long are NULL!");
     }
     else {
       Firestore.instance.collection('test').add({
@@ -582,19 +665,21 @@ class MapSampleState extends State<MapSample> {
           barrierDismissible: true,
           builder: (BuildContext context) {
             return new SimpleDialog(
+              backgroundColor: Colors.white,
               title: new Text(
-                'Add Marker',
-                style: new TextStyle(fontSize: 17.0),
+                'Compose Marker info',
+                style: new TextStyle(fontSize: 17.0,color: Colors.black),
               ),
               children: <Widget>[
-                new TextField(
+                new CupertinoTextField(
                   controller: _titleController,
 
-                  decoration: InputDecoration(
-            hintText: 'Marker title',
-              errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
-            border: InputBorder.none,
-            ),
+//                  decoration: InputDecoration(
+//            hintText: 'Marker title',
+//              errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
+//            border: InputBorder.none,
+//            ),
+                placeholder: 'Marker title',
 
 
 
@@ -605,21 +690,23 @@ class MapSampleState extends State<MapSample> {
                   },
                 ),
 
-            new TextField(
+            new CupertinoTextField(
               controller: _descriptionController,
 
-              decoration: InputDecoration(
-            hintText: 'Marker message', errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
-            border: InputBorder.none,
-            ),
+//              decoration: InputDecoration(
+//            hintText: 'Marker message', errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
+//            border: InputBorder.none,
+//            ),
+            placeholder: 'Marker message',
 
             ),
 
 
                 new SimpleDialogOption(
                   child: new Text('Add Marker',
-                      style: new TextStyle(color: Colors.amberAccent)),
+                      style: new TextStyle(color: Colors.black)),
                   onPressed: () {
+                    if(_titleController != null|| _descriptionController != null){
 
                     setState(() {
                       _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
@@ -631,7 +718,15 @@ class MapSampleState extends State<MapSample> {
 
 
               Navigator.of(context).pop();
+
             }
+                    }
+                    else
+                      {
+                        Toast.show("Fill in all entry fields.", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.TOP);
+
+                        print("empty fields");
+                      }
                   },
                 )
               ],
@@ -641,64 +736,5 @@ class MapSampleState extends State<MapSample> {
 
 }
 
-
-
-  Widget _getMapButtons() {
-    return SpeedDial(
-      animatedIcon: AnimatedIcons.menu_close,
-      animatedIconTheme: IconThemeData(size: 22,color: Colors.white),
-      backgroundColor: Colors.black,
-      visible: true,
-      curve: Curves.bounceIn,
-      children:
-      [
-
-        SpeedDialChild(
-            child: Icon(Icons.my_location),
-            backgroundColor: Colors.amberAccent,
-            onTap: () { _goToUser(); },
-            label: 'Move camera to location',
-            labelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                fontSize: 16.0),
-            labelBackgroundColor: Colors.amberAccent),
-
-        SpeedDialChild(
-            child: Icon(Icons.refresh),
-            backgroundColor: Colors.amberAccent,
-            onTap: () { re_InitilizeMap(); },
-            label: 'Refresh Map',
-            labelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                fontSize: 16.0),
-            labelBackgroundColor: Colors.amberAccent),
-
-        SpeedDialChild(
-            child: Icon(Icons.pin_drop),
-            backgroundColor: Colors.amberAccent,
-            onTap: () {
-              if(_lastMapPosition.latitude == null){
-                print("damn");
-              }
-              else
-              addMarker(_lastMapPosition.latitude,_lastMapPosition.longitude);
-              _titleController.clear();
-              _descriptionController.clear();
-
-              },
-            label: 'Drop pin',
-            labelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-                fontSize: 16.0),
-            labelBackgroundColor: Colors.amberAccent),
-      ],
-    );
-  }
-
-
-
-
 }
+
