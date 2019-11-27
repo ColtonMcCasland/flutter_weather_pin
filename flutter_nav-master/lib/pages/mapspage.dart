@@ -89,6 +89,7 @@ class MapSampleState extends State<MapSample> {
   bool _validate2 = false;
 
   var condition;
+  var tempCondition;
 
   int iconCounter =0;
 
@@ -183,18 +184,32 @@ class MapSampleState extends State<MapSample> {
 
   }
 
-  Future<String> getData(double latitude, double longitude) async {
-    String api = 'http://api.openweathermap.org/data/2.5/forecast';
-    String appId = '34cd503973bce95c2e833573eb0d9561';
+  getLocationWeather(latitude,longitude) async {
 
-    String url = '$api?lat=$latitude&lon=$longitude&APPID=$appId';
+    WeatherRequest weatherRequest = WeatherRequest(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
+    var weatherdata = await weatherRequest.getData();
 
-    http.Response response = await http.get(url);
 
-    Map parsed = json.decode(response.body);
 
-    return parsed['list'][0]['weather'][0]['description'];
+
+//   TODO: parse json here and grab info for card Icons
+    var whole = weatherdata["weather"][0]['description'];
+
+
+    setState(() {
+
+      //     TODO: Save description to array from here
+      tempCondition = whole.toString();
+
+//      conditionsMap.add(whole.toString());
+      print("Temp is: " + tempCondition.toString());
+    });
+
+    return whole.toString();
+
   }
+
 
 
   void re_InitilizeMap() {
@@ -229,7 +244,7 @@ class MapSampleState extends State<MapSample> {
           request['location'].latitude, request['location'].longitude),
       icon: BitmapDescriptor.defaultMarker,
       infoWindow: InfoWindow(
-          title: 'Test title', snippet: 'Message: ' + request['address']),
+          title: request['address']  , snippet: null),
     );
 
 
@@ -339,7 +354,7 @@ class MapSampleState extends State<MapSample> {
           return new Text('Error: ${snapshot.error}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return new CupertinoActivityIndicator();
+            return new CupertinoActivityIndicator(animating: true,);
           default:
 
 
@@ -660,18 +675,24 @@ class MapSampleState extends State<MapSample> {
 
 //  create marker
   Future addMarker(lat, long) async {
+
+    getLocationWeather(lat,long);
+
       await showDialog(
           context: context,
           barrierDismissible: true,
           builder: (BuildContext context) {
-            return new SimpleDialog(
-              backgroundColor: Colors.white,
-              title: new Text(
+
+            return CupertinoAlertDialog(
+                title: new Text(
                 'Compose Marker info',
                 style: new TextStyle(fontSize: 17.0,color: Colors.black),
               ),
-              children: <Widget>[
-                new CupertinoTextField(
+              content: new Text("Pick location conditions:\n" + tempCondition),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: new CupertinoTextField(
                   controller: _titleController,
 
 //                  decoration: InputDecoration(
@@ -689,48 +710,121 @@ class MapSampleState extends State<MapSample> {
                     });
                   },
                 ),
+                ),
+                CupertinoDialogAction(
+                  child: new CupertinoTextField(
+                    placeholder: 'Marker message',
 
-            new CupertinoTextField(
-              controller: _descriptionController,
-
-//              decoration: InputDecoration(
-//            hintText: 'Marker message', errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
-//            border: InputBorder.none,
-//            ),
-            placeholder: 'Marker message',
-
-            ),
+                    controller: _descriptionController,
 
 
-                new SimpleDialogOption(
-                  child: new Text('Add Marker',
-                      style: new TextStyle(color: Colors.black)),
-                  onPressed: () {
+              decoration: null,
+
+            ),),
+                CupertinoDialogAction(
+                  child: new CupertinoButton(child: new Text('Add Marker',
+                      style: new TextStyle(color: Colors.black)), onPressed: () {
                     if(_titleController != null|| _descriptionController != null){
 
-                    setState(() {
-                      _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
-                      _descriptionController.text.isEmpty ? _validate2 = true : _validate2 = false;
-                    });
+                      setState(() {
+                        _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
+                        _descriptionController.text.isEmpty ? _validate2 = true : _validate2 = false;
+                      });
 
-            if (_titleController.text.isEmpty == false && _descriptionController.text.isEmpty == false  ) {
-              addToList(lat, long);
+                      if (_titleController.text.isEmpty == false && _descriptionController.text.isEmpty == false  ) {
+                        addToList(lat, long);
 
 
-              Navigator.of(context).pop();
+                        Navigator.of(context).pop();
 
-            }
+                      }
                     }
                     else
-                      {
-                        Toast.show("Fill in all entry fields.", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.TOP);
+                    {
+                      Toast.show("Fill in all entry fields.", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.TOP);
 
-                        print("empty fields");
-                      }
-                  },
-                )
+                      print("empty fields");
+                    }
+                  },)
+                ),
+
+
+
+
+
               ],
             );
+
+//            return new SimpleDialog(
+//              backgroundColor: Colors.white,
+//              title: new Text(
+//                'Compose Marker info',
+//                style: new TextStyle(fontSize: 17.0,color: Colors.black),
+//              ),
+//              children: <Widget>[
+//                new CupertinoTextField(
+//                  controller: _titleController,
+//
+////                  decoration: InputDecoration(
+////            hintText: 'Marker title',
+////              errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
+////            border: InputBorder.none,
+////            ),
+//                placeholder: 'Marker title',
+//
+//
+//
+//                  onChanged: (String enteredLoc) {
+//                    setState(() {
+//                      inputaddr = enteredLoc;
+//                    });
+//                  },
+//                ),
+//
+//            new CupertinoTextField(
+//              controller: _descriptionController,
+//
+////              decoration: InputDecoration(
+////            hintText: 'Marker message', errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
+////            border: InputBorder.none,
+////            ),
+//            placeholder: 'Marker message',
+//
+//            ),
+//
+//
+//                new SimpleDialogOption(
+//                  child: new Text('Add Marker',
+//                      style: new TextStyle(color: Colors.black)),
+//                  onPressed: () {
+//                    if(_titleController != null|| _descriptionController != null){
+//
+//                    setState(() {
+//                      _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
+//                      _descriptionController.text.isEmpty ? _validate2 = true : _validate2 = false;
+//                    });
+//
+//            if (_titleController.text.isEmpty == false && _descriptionController.text.isEmpty == false  ) {
+//              addToList(lat, long);
+//
+//
+//              Navigator.of(context).pop();
+//
+//            }
+//                    }
+//                    else
+//                      {
+//                        Toast.show("Fill in all entry fields.", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.TOP);
+//
+//                        print("empty fields");
+//                      }
+//                  },
+//                )
+//              ],
+//            );
+
+
+
           });
     re_InitilizeMap();
 

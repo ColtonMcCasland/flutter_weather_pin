@@ -115,18 +115,17 @@ class _LoginPageState extends State<LoginPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child:
+
+                    CupertinoTextField(
                       controller: _emailController,
                       style: TextStyle(
                         color: Colors.black,
                       ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your email",
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(.5),
-                        ),
-                      ),
+
+
+                      placeholder: 'Enter your email',
+
                     ),
                   ),
                 ],
@@ -166,19 +165,24 @@ class _LoginPageState extends State<LoginPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child:
+
+
+
+                    CupertinoTextField(
                       controller: _passwordController,
                       style: TextStyle(
                         color: Colors.black,
                       ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your password",
-                        hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(.5),
-                        ),
-                      ),
+
+
+//                  decoration: InputDecoration(
+//            hintText: 'Marker title',
+//              errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
+//            border: InputBorder.none,
+//            ),
+                      placeholder: 'Enter your password',
+
                     ),
                   ),
                 ],
@@ -190,13 +194,9 @@ class _LoginPageState extends State<LoginPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
-                      splashColor: Colors.black,
-                      color: Colors.white,
+                    child: CupertinoButton(
+                      color: Colors.black,
                       disabledColor: Colors.black.withOpacity(0.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
                       onPressed: _loggingIn == true
                           ? null
                           : () {
@@ -209,13 +209,19 @@ class _LoginPageState extends State<LoginPage> {
                             child: Padding(
                               padding:
                               const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
-                                'LOGIN',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child:
+
+                              CupertinoButton(
+                                child: Text(
+                                  'Login',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
+
+
                             ),
                           )
                         ],
@@ -236,10 +242,12 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                       onPressed: () {
+
                         Navigator.of(context).push(
                             MaterialPageRoute(builder: (BuildContext ctx) {
                               return SignupPage();
                             }));
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -248,13 +256,17 @@ class _LoginPageState extends State<LoginPage> {
                             child: Padding(
                               padding:
                               const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
-                                'Dont have an Account?  Create one.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
+                              child:
+                              CupertinoButton(
+                                child: Text(
+                                  'Dont have an Account?  Create one.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
+
                             ),
                           )
                         ],

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+
 
 class SignupPage extends StatefulWidget {
   @override
@@ -37,7 +39,7 @@ class _SignupPageState extends State<SignupPage> {
     _key.currentState.removeCurrentSnackBar();
     _key.currentState.showSnackBar(
       SnackBar(
-        content: Text('Creating your acount ....'),
+        content: Text('Creating your acount...'),
       ),
     );
 
@@ -76,10 +78,10 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CupertinoPageScaffold(
       key: _key,
-      backgroundColor: Colors.amber,
-      body: Form(
+      backgroundColor: Colors.white,
+      child: Form(
         child: ListView(
           children: <Widget>[
             Padding(
@@ -124,17 +126,11 @@ class _SignupPageState extends State<SignupPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child: CupertinoTextField(
                       controller: _nameController,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your name",
-                        hintStyle: TextStyle(
+                        placeholder: "Enter your name",
+                        style: TextStyle(
                           color: Colors.black.withOpacity(.5),
-                        ),
                       ),
                     ),
                   ),
@@ -175,17 +171,11 @@ class _SignupPageState extends State<SignupPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child: CupertinoTextField(
                       controller: _emailController,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your email",
-                        hintStyle: TextStyle(
+                        placeholder: "Enter your email",
+                        style: TextStyle(
                           color: Colors.black.withOpacity(.5),
-                        ),
                       ),
                     ),
                   ),
@@ -226,19 +216,14 @@ class _SignupPageState extends State<SignupPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child: CupertinoTextField(
                       controller: _passwordController,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
+
                       obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your password",
-                        hintStyle: TextStyle(
+                        placeholder: "Enter your password",
+                        style: TextStyle(
                           color: Colors.black.withOpacity(.5),
                         ),
-                      ),
                     ),
                   ),
                 ],
@@ -278,19 +263,13 @@ class _SignupPageState extends State<SignupPage> {
                     margin: EdgeInsets.only(right: 10.0),
                   ),
                   Expanded(
-                    child: TextFormField(
+                    child: CupertinoTextField(
                       controller: _passwordConfirmController,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
                       obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Re-enter your password",
-                        hintStyle: TextStyle(
+                        placeholder: "Re-enter your password",
+                        style: TextStyle(
                           color: Colors.black.withOpacity(.5),
                         ),
-                      ),
                     ),
                   ),
                 ],
@@ -302,18 +281,15 @@ class _SignupPageState extends State<SignupPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: FlatButton(
-                      splashColor: Colors.black,
+                    child: CupertinoButton(
                       color: Colors.black,
-                      disabledColor: Colors.black.withOpacity(.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      onPressed: _loggingIn == true
-                          ? null
-                          : () {
-                              _signup();
-                            },
+//                      disabledColor: Colors.black.withOpacity(.5),
+                      onPressed:
+                      _loggingIn == true ? null : () {
+                        if(_nameController != null || _emailController != null || _passwordConfirmController != null || _passwordController != null) {
+                          _signup();
+                        }
+                        },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -322,7 +298,7 @@ class _SignupPageState extends State<SignupPage> {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 16.0),
                               child: Text(
-                                'SIGN UP',
+                                'Sign up',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -357,13 +333,7 @@ class _SignupPageState extends State<SignupPage> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
-                                'Already have an Account?  Login here.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
+                              child: Icon(CupertinoIcons.back, color:  Colors.black,)
                             ),
                           )
                         ],
