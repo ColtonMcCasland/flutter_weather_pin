@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
               child: Icon(
-                WeatherIcons.cloud_refresh,
+                CupertinoIcons.location,
 
                 size: 180.0,
                 color: Colors.black,
@@ -208,7 +208,7 @@ class _LoginPageState extends State<LoginPage> {
                           Expanded(
                             child: Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 16.0),
+                              const EdgeInsets.symmetric(vertical: 1.0),
                               child:
 
                               CupertinoButton(

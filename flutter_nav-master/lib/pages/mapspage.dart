@@ -39,8 +39,8 @@ class MapsPage extends StatelessWidget {
             title: Text('Home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.bluetooth),
-            title: Text('???'),
+            icon: Icon(CupertinoIcons.profile_circled),
+            title: Text('User Page'),
           ),
         ],
       ),
@@ -75,8 +75,10 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
-  WeatherStation weatherStation = new WeatherStation(
-      "34cd503973bce95c2e833573eb0d9561");
+
+  WeatherStation weatherStation = new WeatherStation("34cd503973bce95c2e833573eb0d9561");
+
+
 
   //  title controller
   final _titleController = TextEditingController();
@@ -184,31 +186,31 @@ class MapSampleState extends State<MapSample> {
 
   }
 
-  getLocationWeather(latitude,longitude) async {
-
-    WeatherRequest weatherRequest = WeatherRequest(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
-    var weatherdata = await weatherRequest.getData();
-
-
-
-
-//   TODO: parse json here and grab info for card Icons
-    var whole = weatherdata["weather"][0]['description'];
-
-
-    setState(() {
-
-      //     TODO: Save description to array from here
-      tempCondition = whole.toString();
-
-//      conditionsMap.add(whole.toString());
-      print("Temp is: " + tempCondition.toString());
-    });
-
-    return whole.toString();
-
-  }
+//  getLocationWeather(latitude,longitude) async {
+//
+//    WeatherRequest weatherRequest = WeatherRequest(
+//        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
+//    var weatherdata = await weatherRequest.getData();
+//
+//
+//
+//
+////   TODO: parse json here and grab info for card Icons
+//    var whole = weatherdata["weather"][0]['description'];
+//
+//
+//    setState(() {
+//
+//      //     TODO: Save description to array from here
+//      tempCondition = whole.toString();
+//
+////      conditionsMap.add(whole.toString());
+//      print("Temp is: " + tempCondition.toString());
+//    });
+//
+//    return whole.toString();
+//
+//  }
 
 
 
@@ -676,7 +678,7 @@ class MapSampleState extends State<MapSample> {
 //  create marker
   Future addMarker(lat, long) async {
 
-    getLocationWeather(lat,long);
+//    getLocationWeather(lat ?? 11,long ?? 11);
 
       await showDialog(
           context: context,
@@ -688,11 +690,11 @@ class MapSampleState extends State<MapSample> {
                 'Compose Marker info',
                 style: new TextStyle(fontSize: 17.0,color: Colors.black),
               ),
-              content: new Text("Pick location conditions:\n" + tempCondition),
+              content: new Text("Pick location conditions:\n" + "null"),
               actions: <Widget>[
                 CupertinoDialogAction(
-                  isDefaultAction: true,
                   child: new CupertinoTextField(
+                    style: new TextStyle(color: Colors.black),
                   controller: _titleController,
 
 //                  decoration: InputDecoration(
@@ -713,12 +715,13 @@ class MapSampleState extends State<MapSample> {
                 ),
                 CupertinoDialogAction(
                   child: new CupertinoTextField(
+                    style: new TextStyle(color: Colors.black),
+
                     placeholder: 'Marker message',
 
                     controller: _descriptionController,
 
 
-              decoration: null,
 
             ),),
                 CupertinoDialogAction(
@@ -747,84 +750,8 @@ class MapSampleState extends State<MapSample> {
                     }
                   },)
                 ),
-
-
-
-
-
               ],
             );
-
-//            return new SimpleDialog(
-//              backgroundColor: Colors.white,
-//              title: new Text(
-//                'Compose Marker info',
-//                style: new TextStyle(fontSize: 17.0,color: Colors.black),
-//              ),
-//              children: <Widget>[
-//                new CupertinoTextField(
-//                  controller: _titleController,
-//
-////                  decoration: InputDecoration(
-////            hintText: 'Marker title',
-////              errorText: _validate1 ? 'Value Can\'t Be Empty' : null,
-////            border: InputBorder.none,
-////            ),
-//                placeholder: 'Marker title',
-//
-//
-//
-//                  onChanged: (String enteredLoc) {
-//                    setState(() {
-//                      inputaddr = enteredLoc;
-//                    });
-//                  },
-//                ),
-//
-//            new CupertinoTextField(
-//              controller: _descriptionController,
-//
-////              decoration: InputDecoration(
-////            hintText: 'Marker message', errorText: _validate2 ? 'Value Can\'t Be Empty' : null,
-////            border: InputBorder.none,
-////            ),
-//            placeholder: 'Marker message',
-//
-//            ),
-//
-//
-//                new SimpleDialogOption(
-//                  child: new Text('Add Marker',
-//                      style: new TextStyle(color: Colors.black)),
-//                  onPressed: () {
-//                    if(_titleController != null|| _descriptionController != null){
-//
-//                    setState(() {
-//                      _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
-//                      _descriptionController.text.isEmpty ? _validate2 = true : _validate2 = false;
-//                    });
-//
-//            if (_titleController.text.isEmpty == false && _descriptionController.text.isEmpty == false  ) {
-//              addToList(lat, long);
-//
-//
-//              Navigator.of(context).pop();
-//
-//            }
-//                    }
-//                    else
-//                      {
-//                        Toast.show("Fill in all entry fields.", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.TOP);
-//
-//                        print("empty fields");
-//                      }
-//                  },
-//                )
-//              ],
-//            );
-
-
-
           });
     re_InitilizeMap();
 
