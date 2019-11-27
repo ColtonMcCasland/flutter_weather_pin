@@ -200,11 +200,11 @@ class MapSampleState extends State<MapSample> {
   void re_InitilizeMap() {
      markers.clear();
      conditionsMap.clear();
+     iconCounter=0;
     getCurrentLocation();
     populateMap_w_Markers();
     super.initState();
-     iconCounter=0;
-
+    
   }
 
   @override
