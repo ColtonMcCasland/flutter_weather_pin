@@ -277,8 +277,8 @@ class _SignupPageState extends State<SignupPage> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: CupertinoButton(
-                      color: Colors.black,
+                    child: FlatButton(
+//                      color: Colors.black,
 //                      disabledColor: Colors.black.withOpacity(.5),
                       onPressed:
                       _loggingIn == true ? null : () {
@@ -292,14 +292,17 @@ class _SignupPageState extends State<SignupPage> {
                           Expanded(
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              child: Text(
+                              const EdgeInsets.symmetric(vertical: 16.0),
+                              child:
+                              CupertinoButton(
+                                child: Text(
                                 'Sign up',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
-                              ),
+                                ),
+                              )
                             ),
                           )
                         ],

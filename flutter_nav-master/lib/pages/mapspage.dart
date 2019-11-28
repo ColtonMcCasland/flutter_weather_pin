@@ -256,14 +256,18 @@ class MapSampleState extends State<MapSample> {
   }
 
   void getCamera_on_Location() async {
+
     Position res = await Geolocator().getCurrentPosition();
     setState(() {
       position = res;
       CameraPosition(target: LatLng(position.latitude, position.longitude));
+      re_InitilizeMap();
+
     });
   }
 
-  void getCamera_on_Marker(location)  async {
+  void getCamera_on_Marker(location)  async
+  {
     final GoogleMapController controller = await _controller.future;
 
     controller.animateCamera(
@@ -272,7 +276,8 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  void populateMap_w_Markers() {
+  void populateMap_w_Markers()
+  {
     print("loading markers...");
 
     Firestore.instance.collection('test').getDocuments().then((docs) {
@@ -309,7 +314,9 @@ class MapSampleState extends State<MapSample> {
       onMapCreated:
           (GoogleMapController controller) {
         _controller.complete(controller);
+
       },
+
     );
   }
 
@@ -589,18 +596,21 @@ class MapSampleState extends State<MapSample> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
 
-//                        color: Colors.blueGrey,
-                      color:  CupertinoColors.lightBackgroundGray,
+                        color: Colors.white30,
+//                      color:  CupertinoColors.lightBackgroundGray,
                       borderOnForeground: true,
 
                       child: Container(
+
+
+
                           padding: const EdgeInsets.only(top: 1.0),
                           child: Column(
                             children: <Widget>[
                               Text(document['address'],
                                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
 
-                              SizedBox(height: 3),
+                              SizedBox(height: 0),
                               //separator and spa
                               Text("conditions: \n" +
                                   conditionsMap[iconCounter - 1] ?? "null",
@@ -610,8 +620,8 @@ class MapSampleState extends State<MapSample> {
 
                               SizedBox( width: 150,
                                 child: CupertinoButton(
-                                  color: cardColor,
-                                  child: cardIcon,  ),
+                                  color: Colors.blueGrey,
+                                  child: Container(child: cardIcon,  ),),
                               ),
                               //separator and spacer
                               SizedBox(
@@ -662,10 +672,10 @@ class MapSampleState extends State<MapSample> {
                                 ),
                               ),
 
-                              SizedBox(height: 5,),
+                              SizedBox(height: 2,),
                               //separator and spacer
                               SizedBox(
-                                height: 30,
+                                height: 18,
                                 width: 70,
                                 child: CupertinoButton(
                                   color: Colors.redAccent,
@@ -676,11 +686,17 @@ class MapSampleState extends State<MapSample> {
                                   padding: EdgeInsets.all(0),
                                   // make the padding 0 so the child wont be dragged right by the default padding
                                   child: Container(
+
                                     child: Text("Delete",
                                       style: TextStyle(color: Colors.black),),
                                   ),
                                 ),
                               ),
+
+
+
+
+
                             ],
                           )
                       )
@@ -702,10 +718,12 @@ class MapSampleState extends State<MapSample> {
   Widget build(BuildContext context) {
      iconCounter = 0;
     return  CupertinoPageScaffold(
+
       backgroundColor: CupertinoColors.white,
       child:
       Column(children: <Widget>[
-        SizedBox(height: 20),
+
+        SizedBox(height: 70, ),
 //        Text("Marker list: ", style: TextStyle(color: Colors.black),),
         Container(
           child: SizedBox(
@@ -728,7 +746,7 @@ class MapSampleState extends State<MapSample> {
           )),
           child: SizedBox(
         height: screenHeight(context,
-            dividedBy: 2),
+            dividedBy: 3),
         child: _map,
           ),
         ),
@@ -760,9 +778,11 @@ class MapSampleState extends State<MapSample> {
               ),
             ]
         ),
-      ]
+      ],
       ), //map
-//      floatingActionButton: _getMapButtons(), //buttons
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("Main page"),
+      ),
     );
   }
 
