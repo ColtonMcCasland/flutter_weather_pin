@@ -86,11 +86,7 @@ class _SignupPageState extends State<SignupPage> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 72.0, bottom: 36.0),
-              child: Icon(
-                Icons.wb_cloudy,
-                size: 60.0,
-                color: Colors.black,
-              ),
+
             ),
             Container(
               margin: const EdgeInsets.symmetric(
@@ -115,7 +111,7 @@ class _SignupPageState extends State<SignupPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.person,
+                      CupertinoIcons.person,
                       color: Colors.black,
                     ),
                   ),
@@ -160,7 +156,7 @@ class _SignupPageState extends State<SignupPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.alternate_email,
+                      CupertinoIcons.mail,
                       color: Colors.black,
                     ),
                   ),
@@ -205,7 +201,7 @@ class _SignupPageState extends State<SignupPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.lock_open,
+                      CupertinoIcons.padlock,
                       color: Colors.black,
                     ),
                   ),
@@ -252,7 +248,7 @@ class _SignupPageState extends State<SignupPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 10.0, horizontal: 15.0),
                     child: Icon(
-                      Icons.lock_open,
+                      CupertinoIcons.padlock,
                       color: Colors.black,
                     ),
                   ),

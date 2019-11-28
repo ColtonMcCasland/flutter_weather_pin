@@ -8,6 +8,8 @@ import 'pages/homepage.dart';
 import 'pages/timelinepage.dart';
 import 'pages/mapspage.dart';
 import 'pages/calendarpage.dart';
+import 'package:flutter/cupertino.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -22,9 +24,9 @@ class MyApp extends StatelessWidget {
 
       theme : ThemeData(
         // Define the default brightness and colors.
-        brightness: Brightness.dark,
-        primaryColor: Colors.white,
-        accentColor: Colors.white30,
+        brightness: Brightness.light,
+        primaryColor: CupertinoColors.white,
+        accentColor:  CupertinoColors.inactiveGray,
 
         // Define the default font family.
         fontFamily: 'Montserrat',
