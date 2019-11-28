@@ -195,7 +195,6 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   Expanded(
                     child: CupertinoButton(
-                      color: Colors.black,
                       disabledColor: Colors.black.withOpacity(0.5),
                       onPressed: _loggingIn == true
                           ? null
@@ -211,15 +210,30 @@ class _LoginPageState extends State<LoginPage> {
                               const EdgeInsets.symmetric(vertical: 1.0),
                               child:
 
-                              CupertinoButton(
-                                child: Text(
-                                  'Login',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                              FlatButton(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Padding(
+                                        padding:
+                                        const EdgeInsets.symmetric(vertical: 16.0),
+                                        child:
+                                        CupertinoButton(
+                                          child: Text(
+                                            'Login',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                borderRadius: BorderRadius.all(Radius.elliptical(50.0,50)),
+//                                borderRadius: BorderRadius.all(Radius.elliptical(50.0,50)),
 
                               ),
 

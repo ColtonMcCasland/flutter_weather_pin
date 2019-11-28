@@ -145,8 +145,8 @@ class MapSampleState extends State<MapSample> {
   void initState() {
     _map = CupertinoActivityIndicator();
 
-    getCurrentLocation();
-    populateMap_w_Markers();
+    re_InitilizeMap();
+
     super.initState();
 
     //    Connect Task text controllers to fields.
@@ -372,8 +372,7 @@ class MapSampleState extends State<MapSample> {
                           Icon(WeatherIcons.day_cloudy, color: Colors.black,);
                       cardColor = Colors.blueGrey;
                     }
-                    else
-                    if (conditionsMap[iconCounter ] == "scattered clouds") {
+                    else if (conditionsMap[iconCounter ] == "scattered clouds") {
                       cardIcon =
                           Icon(WeatherIcons.day_cloudy, color: Colors.black,);
                       cardColor = Colors.blueGrey;
@@ -598,23 +597,27 @@ class MapSampleState extends State<MapSample> {
                           padding: const EdgeInsets.only(top: 1.0),
                           child: Column(
                             children: <Widget>[
-                              Text("Marker: " + document['address'] ?? "",
-                                style: TextStyle(color: Colors.black),),
+                              Text(document['address'],
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
 
                               SizedBox(height: 3),
                               //separator and spa
                               Text("conditions: \n" +
                                   conditionsMap[iconCounter - 1] ?? "null",
                                 style: TextStyle(
-                                  color: Colors.black, fontSize: 12,),),
+                                  color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),),
                               //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
-                              SizedBox(height: 5),
-                              //separator and spacer
-                              SizedBox(
-                                height: 30,
+                              SizedBox( width: 150,
                                 child: CupertinoButton(
                                   color: cardColor,
+                                  child: cardIcon,  ),
+                              ),
+                              //separator and spacer
+                              SizedBox(
+                                height: 20,
+                                child: CupertinoButton(
+//                                  color: cardColor,
                                   onPressed: () {
                                     Toast.show(
                                         "Address: " + document['address'] ??
@@ -630,9 +633,7 @@ class MapSampleState extends State<MapSample> {
                                   padding: EdgeInsets.all(0),
                                   // make the padding 0 so the child wont be dragged right by the default padding
                                   child: Container(
-                                    child: Text(
-                                      "Address: " + document['address'] ?? "",
-                                      style: TextStyle(color: Colors.black),),
+                                    child: Icon(Icons.location_searching),
                                   ),
                                 ),
                               ),
@@ -642,7 +643,7 @@ class MapSampleState extends State<MapSample> {
                               SizedBox(
                                 height: 20,
                                 child: CupertinoButton(
-                                  color: cardColor,
+//                                  color: cardColor,
                                   onPressed: () {
                                     Navigator.push(
                                         context,
@@ -664,7 +665,8 @@ class MapSampleState extends State<MapSample> {
                               SizedBox(height: 5,),
                               //separator and spacer
                               SizedBox(
-                                height: 20,
+                                height: 30,
+                                width: 70,
                                 child: CupertinoButton(
                                   color: Colors.redAccent,
                                   onPressed: () {
