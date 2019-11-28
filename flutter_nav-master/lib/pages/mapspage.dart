@@ -643,7 +643,7 @@ class MapSampleState extends State<MapSample> {
                               SizedBox(
                                 height: 20,
                                 child: CupertinoButton(
-//                                  color: cardColor,
+                                  color: cardColor,
                                   onPressed: () {
                                     Navigator.push(
                                         context,
@@ -835,8 +835,8 @@ class MapSampleState extends State<MapSample> {
               ),
               content: new Text(""),
               actions: <Widget>[
-                CupertinoDialogAction(
-                  child: new CupertinoTextField(
+
+              new CupertinoTextField(
                     style: new TextStyle(color: Colors.black),
                   controller: _titleController,
 
@@ -848,16 +848,14 @@ class MapSampleState extends State<MapSample> {
                     });
                   },
                 ),
-                ),
-                CupertinoDialogAction(
-                  child: new CupertinoTextField(
+                 new CupertinoTextField(
                     style: new TextStyle(color: Colors.black),
 
                     placeholder: 'Marker message',
 
                     controller: _descriptionController,
 
-            ),),
+            ),
                 CupertinoDialogAction(
                   child: new CupertinoButton(child: new Text('Add Marker',
                       style: new TextStyle(color: Colors.black)), onPressed: () {
