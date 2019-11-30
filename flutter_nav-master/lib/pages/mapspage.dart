@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:f_nav/pages/settings.dart';
 import 'package:flutter/material.dart';
 import '../widgets/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,12 +16,15 @@ import 'package:f_nav/weather_request.dart';
 
 import 'package:weather_icons/weather_icons.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:f_nav/pages/account.dart';
 
 
 
 import 'package:f_nav/pages/DetailPage.dart';
 const apiKey = 'c287f389370cfc2c227abf41d002858d';
 
+
+//TODO: Work on getting weather function to load markers syncronously with condition order.
 
 class MapsPage extends StatelessWidget {
 
@@ -41,7 +45,11 @@ class MapsPage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.profile_circled),
-            title: Text('User Page', style: TextStyle(fontSize: 15),),
+            title: Text('Profile Page', style: TextStyle(fontSize: 15),),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.settings),
+            title: Text('Settings Page', style: TextStyle(fontSize: 15),),
           ),
         ],
       ),
@@ -53,10 +61,10 @@ class MapsPage extends StatelessWidget {
                 return MapSample();
                 break;
               case 1:
-                return Container();
+                return AccountScreen();
                 break;
               default:
-                return Container();
+                return SettingsScreen();
             }
           },
         );
@@ -145,13 +153,14 @@ class MapSampleState extends State<MapSample> {
   void initState() {
     _map = CupertinoActivityIndicator();
 
-    re_InitilizeMap();
 
     super.initState();
 
     //    Connect Task text controllers to fields.
     _titleController.text = inputaddr;
     _descriptionController.text = inputaddr;
+    re_InitilizeMap();
+
 
   }
 
@@ -455,7 +464,7 @@ class MapSampleState extends State<MapSample> {
 //        Text("Marker list: ", style: TextStyle(color: Colors.black),),
         Container(
           child: SizedBox(
-            height: screenHeight(context, dividedBy: 5),
+            height: screenHeight(context, dividedBy: 3.5),
 //            width: screenWidth(context, dividedBy: 1.1),
             child: listWidget(),
           ),

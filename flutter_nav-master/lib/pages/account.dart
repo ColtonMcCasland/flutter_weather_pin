@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class AccountScreen extends StatelessWidget {
-  static const String routeName = "/account";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Account"),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("Account"),
       ),
-      body: Container(
+      child: Container(
           child: Center(
         child: Text("Account Screen"),
       )),

@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:f_nav/weather_request.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+// TODO: Idea: Detail page could act as interface for listeners of change for weather conditions per marker, by not closing the page the app will listen for changes and notify the user of changes.
+
 
 class SecondPage extends StatefulWidget
 {

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class SettingsScreen extends StatelessWidget {
-  static const String routeName = "/settings";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Settings"),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("Settings"),
       ),
-      body: Container(
+      child: Container(
           child: Center(
-        child: Text("Settings Screen"),
-      )),
+            child: Text("Settings Screen"),
+          )),
     );
   }
 }
