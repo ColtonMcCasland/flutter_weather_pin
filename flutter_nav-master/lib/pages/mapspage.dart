@@ -18,7 +18,7 @@ import 'package:flutter/cupertino.dart';
 
 
 
-import 'package:f_nav/pages/secondPage.dart';
+import 'package:f_nav/pages/DetailPage.dart';
 const apiKey = 'c287f389370cfc2c227abf41d002858d';
 
 
@@ -29,7 +29,8 @@ class MapsPage extends StatelessWidget {
   final title = "Notifications Page";
   final description = "add content....";
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         backgroundColor: CupertinoColors.lightBackgroundGray,
@@ -50,7 +51,6 @@ class MapsPage extends StatelessWidget {
             switch (index) {
               case 0:
                 return MapSample();
-            ;
                 break;
               case 1:
                 return Container();
@@ -159,31 +159,6 @@ class MapSampleState extends State<MapSample> {
   double longitude;
 
 
-   getDataWeather(latitude,longitude) async {
-
-    WeatherRequest weatherRequest = WeatherRequest(
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
-    var weatherdata = await weatherRequest.getData();
-
-
-
-
-//   TODO: parse json here and grab info for card Icons
-    var whole = weatherdata["weather"][0]['description'];
-
-
-     setState(() {
-
-       //     TODO: Save description to array from here
-       condition = whole.toString();
-
-       conditionsMap.add(whole.toString());
-       print("Array is: " + conditionsMap.toString());
-     });
-
-  return whole.toString();
-
-  }
 
 
   void re_InitilizeMap() {
@@ -227,7 +202,6 @@ class MapSampleState extends State<MapSample> {
 
 
     await setState(() {
-      condition = getDataWeather(request['location'].latitude,request['location'].longitude);
 
       markers.add(marker);
 
@@ -334,7 +308,7 @@ class MapSampleState extends State<MapSample> {
           case ConnectionState.waiting:
             return new CupertinoActivityIndicator(animating: true,);
           default:
-            if (!snapshot.hasData || snapshot.data.documents.length != conditionsMap.length  ) {
+            if (!snapshot.hasData ) {
               return CupertinoActivityIndicator();
             }
 
@@ -352,251 +326,16 @@ class MapSampleState extends State<MapSample> {
 
                   var temp = condition.toString();
 
-                  // init card icon
-                  var cardIcon;
-                  // init card color
-                  var cardColor;
 
-                  //  Conditions for card icons and color from OpenWeatherMap
-                  if (conditionsMap[iconCounter].isNotEmpty &&
-                      conditionsMap[iconCounter].length != 0) {
-
-//                    SKY
-                    if (conditionsMap[iconCounter] == "clear sky") {
-                      cardIcon = Icon(
-                        WeatherIcons.day_sunny_overcast, color: Colors.black,);
-                      cardColor = Colors.yellow;
-                    }
-
-//                    CLOUDS
-                    else if (conditionsMap[iconCounter] == "scattered clouds") {
-                      cardIcon = Icon(
-                        WeatherIcons.day_cloudy_high, color: Colors.black,);
-                      cardColor = Colors.grey;
-                    }
-                    else if (conditionsMap[iconCounter] == "few clouds") {
-                      cardIcon =
-                          Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                      cardColor = Colors.blueGrey;
-                    }
-                    else if (conditionsMap[iconCounter ] == "scattered clouds") {
-                      cardIcon =
-                          Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                      cardColor = Colors.blueGrey;
-                    }
-                    else if (conditionsMap[iconCounter ] == "broken clouds") {
-                      cardIcon =
-                          Icon(WeatherIcons.day_cloudy, color: Colors.black,);
-                      cardColor = Colors.blueGrey;
-                    }
-                    else if (conditionsMap[iconCounter ] == "overcast clouds") {
-                      cardIcon = Icon(
-                        WeatherIcons.day_cloudy_gusts, color: Colors.black,);
-                      cardColor = Colors.grey;
-                    }
-
-//                    THUNDERSTORM
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with light rain") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with rain") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with heavy rain") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "light thunderstorm") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy thunderstorm") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "ragged thunderstorm") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with light drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "thunderstorm with heavy drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-
-
-
-
-
-//                    DRIZZLE
-                    else if (conditionsMap[iconCounter ] == "light intensity drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy intensity drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "light intensity drizzle rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "drizzle rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy intensity drizzle rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "shower rain and drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy shower rain and drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "shower drizzle") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-
-
-
-//                    RAIN
-                    else if (conditionsMap[iconCounter ] == "rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blueAccent;
-                    }
-                    else if (conditionsMap[iconCounter ] == "light rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "moderate rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy intensity rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "very heavy rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "extreme rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-
-                    else if (conditionsMap[iconCounter ] == "light intensity shower rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-
-                    else if (conditionsMap[iconCounter ] == " shower rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "heavy intensity shower rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-                    else if (conditionsMap[iconCounter ] == "ragged shower rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.blue;
-                    }
-
-                    else if (conditionsMap[iconCounter ] == "freezing rain") {
-                      cardIcon = Icon(WeatherIcons.day_rain, color: Colors
-                          .black,);
-                      cardColor = Colors.lightBlueAccent;
-                    }
-
-
-                    else if (conditionsMap[iconCounter ] == "thunderstorm") {
-                      cardIcon = Icon(WeatherIcons.day_thunderstorm,
-                        color: Colors.black,);
-                      cardColor = Colors.lightBlueAccent;
-                    }
-
-                    else if (conditionsMap[iconCounter ] == "snow") {
-                      cardIcon = Icon(
-                        WeatherIcons.day_snow, color: Colors.black,);
-                      cardColor = Colors.lime;
-                    }
-                    else if (conditionsMap[iconCounter ] == "light snow") {
-                      cardIcon = Icon(
-                        WeatherIcons.day_snow, color: Colors.black,);
-                      cardColor = Colors.white30;
-                    }
-
-                    else if (conditionsMap[iconCounter ] == "mist") {
-                      cardIcon =
-                          Icon(WeatherIcons.day_fog, color: Colors.black,);
-                      cardColor = Colors.teal;
-                    }
-
-                    else {
-                      cardIcon = Icon(Icons.error, color: Colors.red,);
-                    }
-                  }
 
                   iconCounter++; // we increment int here when we build a card
 
                   return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
+//                      shape: RoundedRectangleBorder(
+//                        borderRadius: BorderRadius.circular(20.0),
+//                      ),
 
-                        color: Colors.white30,
+                      color: Colors.white70,
 //                      color:  CupertinoColors.lightBackgroundGray,
                       borderOnForeground: true,
 
@@ -608,24 +347,14 @@ class MapSampleState extends State<MapSample> {
                           child: Column(
                             children: <Widget>[
                               Text(document['address'],
-                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30), ),
 
                               SizedBox(height: 0),
                               //separator and spa
-                              Text("conditions: \n" +
-                                  conditionsMap[iconCounter - 1] ?? "null",
-                                style: TextStyle(
-                                  color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold),),
                               //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
-                              SizedBox( width: 150,
-                                child: CupertinoButton(
-                                  color: Colors.blueGrey,
-                                  child: Container(child: cardIcon,  ),),
-                              ),
                               //separator and spacer
                               SizedBox(
-                                height: 20,
                                 child: CupertinoButton(
 //                                  color: cardColor,
                                   onPressed: () {
@@ -648,12 +377,10 @@ class MapSampleState extends State<MapSample> {
                                 ),
                               ),
 
-                              SizedBox(height: 5,),
                               //separator and spacer
                               SizedBox(
-                                height: 20,
                                 child: CupertinoButton(
-                                  color: cardColor,
+                                  color: CupertinoColors.white,
                                   onPressed: () {
                                     Navigator.push(
                                         context,
@@ -661,21 +388,22 @@ class MapSampleState extends State<MapSample> {
                                             builder: (context) =>
                                                 SecondPage(
                                                     title: document['address'],
-                                                    description: document['address'])));
+                                                    lat: document['location'].latitude,
+                                                    long: document['location'].longitude
+                                                )
+                                        ));
                                   },
                                   padding: EdgeInsets.all(0),
                                   // make the padding 0 so the child wont be dragged right by the default padding
                                   child: Container(
                                     child: Text("More info",
-                                      style: TextStyle(color: Colors.black),),
+                                      style: TextStyle(color: Colors.black, ),),
                                   ),
                                 ),
                               ),
 
-                              SizedBox(height: 2,),
                               //separator and spacer
                               SizedBox(
-                                height: 18,
                                 width: 70,
                                 child: CupertinoButton(
                                   color: Colors.redAccent,
@@ -716,7 +444,7 @@ class MapSampleState extends State<MapSample> {
 
   @override
   Widget build(BuildContext context) {
-     iconCounter = 0;
+
     return  CupertinoPageScaffold(
 
       backgroundColor: CupertinoColors.white,
@@ -727,7 +455,7 @@ class MapSampleState extends State<MapSample> {
 //        Text("Marker list: ", style: TextStyle(color: Colors.black),),
         Container(
           child: SizedBox(
-            height: screenHeight(context, dividedBy: 4),
+            height: screenHeight(context, dividedBy: 5),
 //            width: screenWidth(context, dividedBy: 1.1),
             child: listWidget(),
           ),
@@ -782,6 +510,7 @@ class MapSampleState extends State<MapSample> {
       ), //map
       navigationBar: CupertinoNavigationBar(
         middle: Text("Main page"),
+
       ),
     );
   }
