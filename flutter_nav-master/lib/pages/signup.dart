@@ -78,10 +78,10 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
+    return Scaffold(
       key: _key,
       backgroundColor: Colors.white,
-      child: Form(
+      body: Form(
         child: ListView(
           children: <Widget>[
             Padding(

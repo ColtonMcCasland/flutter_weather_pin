@@ -17,6 +17,7 @@ import 'package:f_nav/weather_request.dart';
 import 'package:weather_icons/weather_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:f_nav/pages/account.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 
@@ -41,7 +42,7 @@ class MapsPage extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.location_solid),
-            title: Text('Marker page', style: TextStyle(fontSize: 15),),
+            title: Text('Markers page', style: TextStyle(fontSize: 15),),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.profile_circled),
@@ -125,9 +126,12 @@ class MapSampleState extends State<MapSample> {
   String inputaddr = '';
   Colors inputcolor;
 
-  String user_uid, user_display_name;
 
   double _lat, _lng;
+
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String user_uid, user_display_name;
+
 
 
 
@@ -149,12 +153,30 @@ class MapSampleState extends State<MapSample> {
     return screenSize(context).width / dividedBy;
   }
 
+
+  void onStart(){
+    _firebaseAuth.currentUser().then((FirebaseUser user) {
+      user_uid = user.uid;
+      user_display_name = user.displayName;
+      print(user_display_name);
+
+    });
+  }
+
   @override
   void initState() {
+
+
+
+
+
     _map = CupertinoActivityIndicator();
 
 
     super.initState();
+
+    onStart();
+
 
     //    Connect Task text controllers to fields.
     _titleController.text = inputaddr;
@@ -178,7 +200,9 @@ class MapSampleState extends State<MapSample> {
     populateMap_w_Markers();
      _titleController.clear();
      _descriptionController.clear();
-    super.initState();
+
+
+
     
   }
 
@@ -303,9 +327,28 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
+  getDataWeather(latitude,longitude) async {
 
-  Widget listWidget()
-  {
+    WeatherRequest weatherRequest = WeatherRequest(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
+    var weatherdata = await weatherRequest.getData();
+
+
+    var whole = weatherdata["weather"][0]['description'];
+
+
+    setState(() {
+
+      condition = whole.toString();
+    });
+
+
+  }
+
+
+   listWidget()  {
+
+
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('test').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -322,27 +365,28 @@ class MapSampleState extends State<MapSample> {
             }
 
               else {
+                print(condition);
+
               // card ListView
-              return new ListView(
+              return
+                ListView(
 
 
                 scrollDirection: Axis.horizontal,
-                children: snapshot.data.documents.map((
-                    DocumentSnapshot document) {
+                children: snapshot.data.documents.map((DocumentSnapshot document)
+                {
+
+
                   var latitude = document['location'].latitude;
                   var longitude = document['location'].longitude;
-//                print("condition: " + condition.toString());
+
 
                   var temp = condition.toString();
 
 
 
-                  iconCounter++; // we increment int here when we build a card
 
                   return Card(
-//                      shape: RoundedRectangleBorder(
-//                        borderRadius: BorderRadius.circular(20.0),
-//                      ),
 
                       color: Colors.white70,
 //                      color:  CupertinoColors.lightBackgroundGray,
@@ -350,15 +394,13 @@ class MapSampleState extends State<MapSample> {
 
                       child: Container(
 
-
-
                           padding: const EdgeInsets.only(top: 1.0),
                           child: Column(
                             children: <Widget>[
                               Text(document['address'],
                                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30), ),
 
-                              SizedBox(height: 0),
+                              SizedBox(height: 15, child: Text('by:' + document['owner_name']),),
                               //separator and spa
                               //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
@@ -367,12 +409,8 @@ class MapSampleState extends State<MapSample> {
                                 child: CupertinoButton(
 //                                  color: cardColor,
                                   onPressed: () {
-                                    Toast.show(
-                                        "Address: " + document['address'] ??
-                                            "" + "\nLat: " +
-                                                latitude.toString() +
-                                                "\nLong: " +
-                                                longitude.toString(), context,
+                                    Toast.show("Address: " + document['address'] ?? "" + "\nLat: " + latitude.toString() + "\nLong: " + longitude.toString(),
+                                        context,
                                         duration: Toast.LENGTH_LONG,
                                         gravity: Toast.TOP);
 
@@ -417,7 +455,7 @@ class MapSampleState extends State<MapSample> {
                                 child: CupertinoButton(
                                   color: Colors.redAccent,
                                   onPressed: () {
-                                    confirmDeleteMarker(document.documentID);
+                                    confirmDeleteMarker(document,document.documentID);
 
                                   },
                                   padding: EdgeInsets.all(0),
@@ -429,11 +467,6 @@ class MapSampleState extends State<MapSample> {
                                   ),
                                 ),
                               ),
-
-
-
-
-
                             ],
                           )
                       )
@@ -529,54 +562,63 @@ class MapSampleState extends State<MapSample> {
   /// Post to Firebase DB
   addToList(lat, long) async {
     if(lat == null || long == null ){print("ERROR: lat and long are NULL!");}
-    else {Firestore.instance.collection('test').add({'location': new GeoPoint(lat, long), 'address': inputaddr,});}
+    else {Firestore.instance.collection('test').add({'location': new GeoPoint(lat, long), 'address': inputaddr, 'owner_name': user_display_name});}
   }
 
 
-  Future confirmDeleteMarker(documentID) async {
+  Future confirmDeleteMarker(document,documentID) async {
+
+    if(user_display_name == document['owner_name'])
+      {
+        await showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+
+              return CupertinoAlertDialog(
+                title: new Text('Compose Marker info',
+                  style: new TextStyle(fontSize: 17.0,color: Colors.black),
+                ),
+                content: new Text("Are you sure?"),
+                actions: <Widget>[
+
+                  CupertinoDialogAction(
+                      child: new CupertinoButton(child: new Text('Cancel',
+                          style: new TextStyle(color: Colors.black)), onPressed: () {
+
+                        setState(() {});
+
+                        Navigator.of(context).pop();
+
+                      },
+                      )
+                  ),
 
 
-    await showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
+                  CupertinoDialogAction(
+                      child: new CupertinoButton(child: new Text('Confirm',
+                          style: new TextStyle(color: Colors.black)), onPressed: () {
 
-          return CupertinoAlertDialog(
-            title: new Text('Compose Marker info',
-              style: new TextStyle(fontSize: 17.0,color: Colors.black),
-            ),
-            content: new Text("Are you sure?"),
-            actions: <Widget>[
+                        setState(() {
+                          deleteMarker(documentID);
+                        });
 
-              CupertinoDialogAction(
-                  child: new CupertinoButton(child: new Text('Cancel',
-                      style: new TextStyle(color: Colors.black)), onPressed: () {
-
-                    setState(() {});
-
-                    Navigator.of(context).pop();
-
-                    },
-                  )
-              ),
+                        Navigator.of(context).pop();
+                      },
+                      )
+                  ),
+                ],
+              );
+            });
+        re_InitilizeMap();
+      }
+    else
+      {
+        Toast.show("Do not have authority to delete this marker.", context);
+      }
 
 
-              CupertinoDialogAction(
-                  child: new CupertinoButton(child: new Text('Confirm',
-                      style: new TextStyle(color: Colors.black)), onPressed: () {
 
-                      setState(() {
-                        deleteMarker(documentID);
-                      });
-
-                      Navigator.of(context).pop();
-                  },
-                 )
-              ),
-            ],
-          );
-        });
-    re_InitilizeMap();
   }
 
   Future ConfirmAddMarker(lat, long) async {
@@ -610,7 +652,6 @@ class MapSampleState extends State<MapSample> {
                     style: new TextStyle(color: Colors.black),
 
                     placeholder: 'Marker message',
-
                     controller: _descriptionController,
 
             ),
