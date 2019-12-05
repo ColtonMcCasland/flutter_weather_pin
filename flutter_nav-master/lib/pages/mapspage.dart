@@ -19,6 +19,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:f_nav/pages/account.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 
 import 'package:f_nav/pages/DetailPage.dart';
@@ -84,6 +86,9 @@ class MapSample extends StatefulWidget {
 }
 
 class MapSampleState extends State<MapSample> {
+
+  // notifications plugin init.
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   WeatherStation weatherStation = new WeatherStation("34cd503973bce95c2e833573eb0d9561");
 
@@ -163,9 +168,58 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+  //  method for notifications
+  Future onSelectNotification(String payload) {
+    debugPrint("payload : $payload");
+    showDialog(
+      context: context,
+      builder: (_) => new AlertDialog(
+        title: new Text('Notification'),
+        content: new Text('$payload'),
+      ),
+    );
+  }
+
+  //   function to cancel scheduled Notification
+  void cancelNotification(int num) async {
+    flutterLocalNotificationsPlugin.cancel(num);
+  }
+
+
+  // function to schedule Notification
+  void scheduleNotification(String title, String desc, int num, DateTime SavedDate) async {
+
+    var scheduledNotificationDateTime = SavedDate;
+
+    var androidPlatformChannelSpecifics =
+    new AndroidNotificationDetails('your other channel id',
+        'your other channel name', 'your other channel description',priority: Priority.High,importance: Importance.Max);
+    var iOSPlatformChannelSpecifics =
+    new IOSNotificationDetails();
+    NotificationDetails platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(
+        num,
+        title,
+        desc,
+        scheduledNotificationDateTime,
+        platformChannelSpecifics,
+        payload: title); //
+  }
+
   @override
   void initState() {
 
+
+    // flutter notification
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+//    android settings
+    var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+//    ios settings
+    var iOS = new IOSInitializationSettings();
+    // using both settings
+    var initSetttings = new InitializationSettings(android, iOS);
+    flutterLocalNotificationsPlugin.initialize(initSetttings, onSelectNotification: onSelectNotification);
 
 
 
@@ -185,6 +239,11 @@ class MapSampleState extends State<MapSample> {
 
 
   }
+
+
+
+  DateTime _setDate = DateTime.now();
+  Duration initialtimer = new Duration();
 
   double latitude;
   double longitude;
@@ -240,6 +299,7 @@ class MapSampleState extends State<MapSample> {
 
     });
   }
+
 
   void getAddress(double latitude, double longitude) async {
     placemark =
@@ -297,6 +357,21 @@ class MapSampleState extends State<MapSample> {
     });
   }
 
+  int countNumMarkers()
+  {
+
+    Firestore.instance.collection('test').getDocuments().then((docs) {
+      if (docs.documents.isNotEmpty) {
+
+        var count =  docs.documents.length.toInt();
+        print(count);
+
+        return count;
+
+      }
+    });
+  }
+
     Future<void> deleteMarker(String documentId){
       return  Firestore.instance.collection('test').document(documentId).delete();
     }
@@ -319,7 +394,8 @@ class MapSampleState extends State<MapSample> {
       initialCameraPosition: CameraPosition(
           target: LatLng(_lat, _lng), zoom: 10),
       onMapCreated:
-          (GoogleMapController controller) {
+          (GoogleMapController controller)
+      {
         _controller.complete(controller);
 
       },
@@ -327,7 +403,8 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-  getDataWeather(latitude,longitude) async {
+  getDataWeather(latitude,longitude) async
+  {
 
     WeatherRequest weatherRequest = WeatherRequest(
         'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=metric&appid=$apiKey');
@@ -337,7 +414,8 @@ class MapSampleState extends State<MapSample> {
     var whole = weatherdata["weather"][0]['description'];
 
 
-    setState(() {
+    setState(()
+    {
 
       condition = whole.toString();
     });
@@ -346,9 +424,8 @@ class MapSampleState extends State<MapSample> {
   }
 
 
-   listWidget()  {
-
-
+   listWidget()
+   {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('test').snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -404,7 +481,6 @@ class MapSampleState extends State<MapSample> {
                               //separator and spa
                               //set array to offload saved conditions from weather query and offset by 1 on account of incrementation before.
 
-                              //separator and spacer
                               SizedBox(
                                 child: CupertinoButton(
 //                                  color: cardColor,
@@ -449,6 +525,22 @@ class MapSampleState extends State<MapSample> {
                                 ),
                               ),
 
+//                            timed notification edit button
+
+
+                            FlatButton(child:
+                              CupertinoButton(
+                                child:  Icon(Icons.timelapse),
+                                color: Colors.greenAccent,
+                                onPressed: ()
+                                {
+                                  confirmEditMarkerTime(document,document.documentID);
+
+
+                                },
+                              ),
+                              ),
+
                               //separator and spacer
                               SizedBox(
                                 width: 70,
@@ -480,7 +572,7 @@ class MapSampleState extends State<MapSample> {
     );
   }
 
-
+  DateTime picked;
 
 
 
@@ -496,46 +588,50 @@ class MapSampleState extends State<MapSample> {
         SizedBox(height: 70, ),
 //        Text("Marker list: ", style: TextStyle(color: Colors.black),),
         Container(
-          child: SizedBox(
-            height: screenHeight(context, dividedBy: 3.5),
-//            width: screenWidth(context, dividedBy: 1.1),
-            child: listWidget(),
-          ),
-        ),
-
-
-        Container(
           margin: const EdgeInsets.all(1.0),
           padding: const EdgeInsets.all(1.0),
           decoration: BoxDecoration(
-            border: Border.all(
-            width: 3.0
-            ),
-            borderRadius: BorderRadius.all(
-            Radius.circular(2.0)
-          )),
+              border: Border.all(
+//                  width: 3.0
+              ),
+              borderRadius: BorderRadius.all(
+                  Radius.circular(2.0)
+              )),
           child: SizedBox(
-        height: screenHeight(context,
-            dividedBy: 3),
-        child: _map,
+            height: screenHeight(context,
+                dividedBy: 3),
+            child: _map,
           ),
+
         ),
 
         Row(
+
+
             children: <Widget>[
-              CupertinoButton(
+              FlatButton(
+
+                color: CupertinoColors.white,
+                shape: new RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.black)),
+
+
+                textColor: Colors.white,
+
+
                 child:
                 CupertinoButton(
-                  color: Colors.black,
-                  disabledColor: Colors.black,
-                  pressedOpacity: .5,
 
-                  borderRadius: BorderRadius.all(Radius.elliptical(10.0,10)),
-                  child:  Icon(Icons.pin_drop),
-                  onPressed: () {
+                  disabledColor: Colors.grey,
+                  pressedOpacity: .6,
+
+                  child:  Icon(Icons.pin_drop, color: CupertinoColors.black,),
+                  onPressed: ()
+                  {
 
                     if(_lastMapPosition.latitude == null){
-                      print("Error: tap performed on pin_drop while latitude what null!");
+                      print("Error: tap performed on pin_drop while geo point is null!");
                     }
                     else
                       ConfirmAddMarker(_lastMapPosition.latitude,_lastMapPosition.longitude);
@@ -546,12 +642,26 @@ class MapSampleState extends State<MapSample> {
                   },
                 ),
               ),
+
             ]
         ),
+        Container(
+          child: SizedBox(
+            height: screenHeight(context, dividedBy: 2.7),
+//            width: screenWidth(context, dividedBy: 1.1),
+            child: listWidget(),
+          ),
+        ),
+
+
+
+
+
       ],
       ), //map
       navigationBar: CupertinoNavigationBar(
         middle: Text("Main page"),
+        trailing: Text("Markers: "),
 
       ),
     );
@@ -599,6 +709,7 @@ class MapSampleState extends State<MapSample> {
                       child: new CupertinoButton(child: new Text('Confirm',
                           style: new TextStyle(color: Colors.black)), onPressed: () {
 
+
                         setState(() {
                           deleteMarker(documentID);
                         });
@@ -616,6 +727,98 @@ class MapSampleState extends State<MapSample> {
       {
         Toast.show("Do not have authority to delete this marker.", context);
       }
+
+
+
+  }
+
+  Future confirmEditMarkerTime(document,documentID) async {
+
+      await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context)
+          {
+//            TODO: have toggle switch to let user choose date, time or both together,
+//          Create notification id by documentId and delete notifications matching id on creation.
+
+            return CupertinoAlertDialog(
+              title: new Text('Edit Marker Notification',
+                style: new TextStyle(fontSize: 17.0,color: Colors.black),
+              ),
+              content: new Text('...'),
+              actions: <Widget>[
+
+
+
+                CupertinoDialogAction(
+                    child: new CupertinoButton(
+                      child:  Text('Time'),
+                      color: Colors.lightGreen,
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext builder) {
+                              return Container(
+                                  height:
+                                  MediaQuery.of(context).copyWith().size.height / 3,
+                                  child: time() );
+                            });
+                      },
+                    ),
+                ),
+
+                CupertinoDialogAction(
+                  child: new CupertinoButton(
+                    child:  Text('Specific Date and Time'),
+                    color: Colors.lightGreen,
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (BuildContext builder) {
+                            return Container(
+                                height:
+                                MediaQuery.of(context).copyWith().size.height / 3,
+                                child: datetime() );
+                          });
+                    },
+                  ),
+                ),
+
+
+
+                CupertinoDialogAction(
+                    child: new CupertinoButton(child: new Text('Cancel',
+                        style: new TextStyle(color: Colors.black)), onPressed: () {
+
+                      setState(() {
+
+                      });
+
+                      Navigator.of(context).pop();
+
+                    },
+                    )
+                ),
+
+
+                CupertinoDialogAction(
+                    child: new CupertinoButton(child: new Text('Confirm',
+                        style: new TextStyle(color: Colors.black)), onPressed: () {
+
+                      setState(()
+                      {
+//                        deleteMarker(documentID);
+                      });
+
+                      Navigator.of(context).pop();
+                    },
+                    )
+                ),
+              ],
+            );
+          });
+      re_InitilizeMap();
 
 
 
@@ -655,6 +858,24 @@ class MapSampleState extends State<MapSample> {
                     controller: _descriptionController,
 
             ),
+
+                CupertinoButton(
+                  child: Text("Date and Time"),
+                  color: Colors.lightGreen,
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext builder) {
+                          return Container(
+                              height:
+                              MediaQuery.of(context).copyWith().size.height /
+                                  3,
+                              child: datetime());
+                        });
+                  },
+                ),
+
+
                 CupertinoDialogAction(
                   child: new CupertinoButton(child: new Text('Add Marker',
                       style: new TextStyle(color: Colors.black)), onPressed: () {
@@ -664,12 +885,22 @@ class MapSampleState extends State<MapSample> {
                       {
                         _titleController.text.isEmpty ? _validate1 = true : _validate1 = false;
                         _descriptionController.text.isEmpty ? _validate2 = true : _validate2 = false;
+
                       });
 
                       if (_titleController.text.isEmpty == false && _descriptionController.text.isEmpty == false  )
                       {
                         addToList(lat, long);
+
+                        setState(() {
+                          var parsedDate = DateTime.parse(picked.toString());
+
+                          scheduleNotification(_titleController.text, _descriptionController.text, countNumMarkers(), parsedDate );
+
+                        });
+
                         Navigator.of(context).pop();
+
                       }
 
                     }
@@ -682,6 +913,48 @@ class MapSampleState extends State<MapSample> {
             );
           });
     re_InitilizeMap();
+  }
+
+
+
+  Widget datetime() {
+
+
+
+    return CupertinoDatePicker(
+      initialDateTime: DateTime.now(),
+      onDateTimeChanged: (DateTime newdate) {
+        print(newdate);
+        if(newdate != null)
+        {
+          picked = newdate;
+        }
+        else
+          print("issue");
+
+      },
+      use24hFormat: false,
+      maximumDate: new DateTime(2020, 12, 30),
+      minimumYear: 2010,
+      maximumYear: 2020,
+      minuteInterval: 1,
+      mode: CupertinoDatePickerMode.dateAndTime,
+    );
+  }
+
+  Widget time() {
+    return CupertinoTimerPicker(
+      mode: CupertinoTimerPickerMode.hms,
+      minuteInterval: 1,
+      secondInterval: 1,
+      initialTimerDuration: initialtimer,
+      onTimerDurationChanged: (Duration changedtimer) {
+        setState(() {
+          initialtimer = changedtimer;
+        });
+        print(changedtimer);
+      },
+    );
   }
 
 }

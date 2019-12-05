@@ -313,7 +313,8 @@ class SecondPageState extends State<SecondPage> {
 
                 ),
                 _body,
-                SizedBox(
+                Container(
+
                   width: 100,
                   height: 100,
                   child: cardIcon,
