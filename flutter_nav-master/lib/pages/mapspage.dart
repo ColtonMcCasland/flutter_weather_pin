@@ -207,6 +207,34 @@ class MapSampleState extends State<MapSample> {
         payload: title); //
   }
 
+  // Method 3
+  Future _showNotificationWithoutSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        playSound: false, importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics =
+    new IOSNotificationDetails(presentSound: false);
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'New Post',
+      'How to Show Notification in Flutter',
+      platformChannelSpecifics,
+      payload: 'No_Sound',
+    );
+//    var scheduledNotificationDateTime = SavedDate;
+//
+//
+//    await flutterLocalNotificationsPlugin.schedule(
+//        num,
+//        title,
+//        desc,
+//        scheduledNotificationDateTime,
+//        platformChannelSpecifics,
+//        payload: title); //
+  }
+
   @override
   void initState() {
 
@@ -824,6 +852,8 @@ class MapSampleState extends State<MapSample> {
 
   }
 
+
+
   Future ConfirmAddMarker(lat, long) async {
 
       await showDialog(
@@ -863,15 +893,16 @@ class MapSampleState extends State<MapSample> {
                   child: Text("Date and Time"),
                   color: Colors.lightGreen,
                   onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext builder) {
-                          return Container(
-                              height:
-                              MediaQuery.of(context).copyWith().size.height /
-                                  3,
-                              child: datetime());
-                        });
+//                    showModalBottomSheet(
+//                        context: context,
+//                        builder: (BuildContext builder) {
+//                          return Container(
+//                              height:
+//                              MediaQuery.of(context).copyWith().size.height /
+//                                  3,
+//                              child: datetime());
+//                        });
+                    _showNotificationWithoutSound();
                   },
                 ),
 
@@ -895,7 +926,8 @@ class MapSampleState extends State<MapSample> {
                         setState(() {
                           var parsedDate = DateTime.parse(picked.toString());
 
-                          scheduleNotification(_titleController.text, _descriptionController.text, countNumMarkers(), parsedDate );
+
+//                          _showNotificationWithoutSound(_titleController.text, _descriptionController.text, countNumMarkers(), parsedDate );
 
                         });
 
