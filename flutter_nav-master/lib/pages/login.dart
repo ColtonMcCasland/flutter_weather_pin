@@ -182,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
 //            border: InputBorder.none,
 //            ),
                       placeholder: 'Enter your password',
+                      obscureText: true,
 
                     ),
                   ),
