@@ -166,6 +166,8 @@ class MapSampleState extends State<MapSample> {
       print(user_display_name);
 
     });
+    re_InitilizeMap();
+
   }
 
   //  method for notifications
@@ -263,7 +265,6 @@ class MapSampleState extends State<MapSample> {
     //    Connect Task text controllers to fields.
     _titleController.text = inputaddr;
     _descriptionController.text = inputaddr;
-    re_InitilizeMap();
 
 
   }
@@ -280,17 +281,15 @@ class MapSampleState extends State<MapSample> {
 
 
   void re_InitilizeMap() {
-     markers.clear();
-     conditionsMap.clear();
-     iconCounter=0;
+
+    markers.clear();
+
     getCurrentLocation();
     populateMap_w_Markers();
-     _titleController.clear();
-     _descriptionController.clear();
 
+    _titleController.clear();
+    _descriptionController.clear();
 
-
-    
   }
 
   @override
